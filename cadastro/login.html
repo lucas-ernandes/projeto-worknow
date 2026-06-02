@@ -23,14 +23,67 @@
             <p>Escolha como você deseja começar na plataforma.</p>
  
             <div class="tipo-conta">
-                <div class="card-tipo ativo" onclick="selecionarTipo(this, 'trabalhador')">
-                    <h3>👨‍💻 Trabalhador</h3>
+                <!-- ✅ CORRIGIDO: chama mostrarInfo -->
+                <div class="card-tipo ativo" onclick="mostrarInfo('trabalhador', this)">
+                    <h3> Trabalhador</h3>
                     <p>Buscar vagas e serviços.</p>
                 </div>
-                <div class="card-tipo" onclick="selecionarTipo(this, 'empregador')">
-                    <h3>🏢 Empregador</h3>
+                <div class="card-tipo" onclick="mostrarInfo('empregador', this)">
+                    <h3> Empregador</h3>
                     <p>Publicar oportunidades.</p>
                 </div>
+            </div>
+
+            <div class="info-perfil" id="info-trabalhador">
+                <h4>O que você vai ter como Trabalhador:</h4>
+                 <ul>
+                    <li>
+                        <strong>Visibilidade real</strong>
+                        <span>Seu perfil aparece para empresas que buscam exatamente o que você oferece.</span>
+                    </li>
+                    <li>
+                        <strong>Freelas e vagas no mesmo lugar</strong>
+                        <span>Trabalhos pontuais ou empregos fixos — você escolhe o que faz sentido pra você.</span>
+                    </li>
+                    <li>
+                        <strong>Propostas chegam até você</strong>
+                        <span>Não precisa ficar caçando vaga. Empregadores te encontram e mandam oferta direto.</span>
+                    </li>
+                    <li>
+                        <strong>Reputação que abre portas</strong>
+                        <span>Cada trabalho bem-feito vira avaliação no seu perfil. Quanto mais você entrega, mais você é procurado.</span>
+                    </li>
+                    <li>
+                        <strong>Histórico organizado</strong>
+                        <span>Acompanhe todas as suas candidaturas e contratos em um só painel.</span>
+                    </li>
+                </ul>
+            </div>
+ 
+            <div class="info-perfil oculto" id="info-empregador">
+                <h4>O que você pode fazer como Empregador:</h4>
+                <ul>
+                    <li>
+                        <strong>Acesso a profissionais verificados</strong>
+                        <span>Busque por área, habilidade ou disponibilidade e encontre quem você precisa mais rápido.</span>
+                    </li>
+                    <li>
+                        <strong>Publique em minutos</strong>
+                        <span>Crie uma vaga ou oportunidade de freela sem burocracia e já comece a receber candidatos.</span>
+                    </li>
+                    <li>
+                        <strong>Gerencie tudo num lugar só</strong>
+                        <span>Candidatos, conversas e contratações organizados no seu painel, sem planilha nem e-mail perdido.</span>
+                    </li>
+                    <li>
+                        <strong>Contrate PF ou PJ</strong>
+                        <span>Flexibilidade total para fechar com autônomos, MEIs ou empresas, do jeito que funcionar pra você.</span>
+                    </li>
+                    <li>
+                        <strong>Construa sua reputação como empresa</strong>
+                        <span>Avaliações de quem trabalhou com você geram confiança e atraem profissionais melhores.</span>
+                    </li>
+                </ul>
             </div>
         </section>
  
@@ -39,26 +92,97 @@
             <h1>CRIAR SUA CONTA</h1>
  
             <form method="POST" onsubmit="return validarForm(event)">
- 
+
+                <div class="radio-grupo">
+                    <label class="radio-opcao">
+                        <input type="radio" name="perfil" value="trabalhador" checked onchange="selecionarTipo('trabalhador')">
+                        <span>👨‍💻 Trabalhador</span>
+                    </label>
+                    <label class="radio-opcao">
+                        <input type="radio" name="perfil" value="empregador" onchange="selecionarTipo('empregador')">
+                        <span>🏢 Empregador</span>
+                    </label>
+                </div>
+
                 <input type="text" placeholder="Nome completo" required>
                 <input type="email" placeholder="Email" required>
-                <input type="password" id="senha" placeholder="Senha" required>
-                <input type="password" id="confirmar" placeholder="Confirmar senha" required>
+
+                <input type="text" id="cpf" placeholder="CPF (000.000.000-00)" maxlength="14" inputmode="numeric" required>
+                <span class="campo-erro" id="erro-cpf"></span>
+
+                <input type="text" id="nascimento" placeholder="Data de nascimento (dd/mm/aaaa)" maxlength="10" inputmode="numeric" required>
+                <span class="campo-erro" id="erro-nascimento"></span>
+
+                <input type="text" id="telefone" placeholder="Telefone (opcional)" maxlength="15" inputmode="numeric">
+
+                <!-- SENHA COM OLHINHO -->
+                <div class="input-senha">
+                    <input type="password" id="senha" placeholder="Senha" required>
+                    <button type="button" class="toggle-senha" onclick="toggleSenha('senha', this)" aria-label="Mostrar senha">
+                        <!-- olho fechado (padrão) -->
+                        <svg class="icone-olho" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
+                            <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>
+                            <line x1="1" y1="1" x2="23" y2="23"/>
+                        </svg>
+                    </button>
+                </div>
  
+                <!-- CONFIRMAR SENHA COM OLHINHO -->
+                <div class="input-senha">
+                    <input type="password" id="confirmar" placeholder="Confirmar senha" required>
+                    <button type="button" class="toggle-senha" onclick="toggleSenha('confirmar', this)" aria-label="Mostrar senha">
+                        <svg class="icone-olho" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
+                            <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>
+                            <line x1="1" y1="1" x2="23" y2="23"/>
+                        </svg>
+                    </button>
+                </div>
+                <span class="campo-erro" id="erro-senha"></span>
+
+                <!-- adicionado classe visivel -->
+                <div id="campos-trabalhador" class="campos-extras visivel">
+                    <div class="separador"><span>Perfil profissional</span></div>
+                    <select id="area-atuacao">
+                        <option value="" disabled selected>Área de atuação</option>
+                        <option>Tecnologia da Informação</option>
+                        <option>Design & UX</option>
+                        <option>Marketing & Comunicação</option>
+                        <option>Construção Civil</option>
+                        <option>Saúde & Bem-estar</option>
+                        <option>Educação</option>
+                        <option>Logística & Transporte</option>
+                        <option>Gastronomia</option>
+                        <option>Administrativo & Financeiro</option>
+                        <option>Outro</option>
+                    </select>
+                    <input type="url" id="portfolio" placeholder="Portfólio ou LinkedIn (opcional)">
+                    <textarea id="habilidades" placeholder="Habilidades principais (ex: React, Photoshop, Soldagem...)" rows="3" maxlength="300"></textarea>
+                </div>
+
+                <div id="campos-empregador" class="campos-extras">
+                    <div class="separador"><span>Dados da empresa</span></div>
+                    <input type="text" id="cnpj" placeholder="CNPJ (opcional) — 00.000.000/0000-00" maxlength="18" inputmode="numeric">
+                    <span class="campo-erro" id="erro-cnpj"></span>
+                    <input type="text" id="nome-empresa" placeholder="Nome da empresa (opcional)">
+                    <input type="text" id="ramo" placeholder="Ramo de atuação (ex: Tecnologia, Varejo...)">
+                </div>
+
                 <label class="termos">
                     <input type="checkbox" required>
                     Aceito os <a href="#">termos de uso</a>
                 </label>
- 
+
                 <input type="submit" value="Cadastrar">
- 
+
                 <div class="register">
                     <span>Já tem conta?</span>
                     <a href="../index.html">Entrar!</a>
                 </div>
-        <!--GOOGLEEEEE-->
-         <div class="divider"><span>ou continue com</span></div>
- 
+
+                <div class="divider"><span>ou continue com</span></div>
+
                 <button type="button" class="btn-google">
                     <svg viewBox="0 0 24 24" width="20" height="20">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -68,16 +192,15 @@
                     </svg>
                     Continuar com Google
                 </button>
- 
+
             </form>
         </section>
-            </form>
-        </section>
- 
     </main>
+    <footer class="footer footer-simples">
+      <p>©2026 WorkNOW. Todos os direitos reservados.</p>
+    </footer>
  
-    <script src="login.js">
-    </script>
+    <script src="login.js"></script>
  
 </body>
 </html>

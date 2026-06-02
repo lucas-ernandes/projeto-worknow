@@ -4,7 +4,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Poppins", sans-serif;
 }
  
 body {
@@ -51,6 +51,52 @@ nav button {
     font-weight: bold;
     cursor: pointer;
 }
+/*Imagem de fundo*/
+.trabai{
+     height: 600px;
+
+    background-image: url('img/trabai\ \(1\).png');
+    background-size: cover;
+    background-position: center;
+    margin-top: 100px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+}
+.trabai::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: rgba(0,0,0,0.45);
+}
+
+.sla-overlay{
+    position: relative;
+    z-index: 1;
+
+    text-align: center;
+    color: white;
+}
+
+.sla-overlay h2{
+    font-size: 90px;
+    line-height: 1;
+    font-weight: 800;
+}
+
+.sla-overlay span{
+    font-size: 90px;
+    line-height: 1;
+    font-weight: 800;
+    background: linear-gradient(to left, #0b6e16 0%, #1f9b2a 40%, #39d632 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
  
 /* ─── MAIN ─── */
 main {
@@ -79,25 +125,10 @@ main {
     width: 50%;
 }
  
-.left-side h2 {
-    font-size: 90px;
-    line-height: 1;
-    font-weight: 800;
-}
- 
-.left-side h2 span {
-    font-size: 90px;
-    line-height: 1;
-    font-weight: 800;
-    background: linear-gradient(to left, #0b6e16 0%, #1f9b2a 40%, #39d632 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
- 
 .left-side p {
-    margin-top: 60px;
-    font-size: 60px;
+    padding-bottom: 100px;
+    font-size: 50px;
+    letter-spacing: 5px;
     font-weight: bold;
 }
  
