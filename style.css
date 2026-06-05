@@ -5,6 +5,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
+   
 }
  
 body {
@@ -18,7 +19,7 @@ header {
     top: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(90deg, #1a7d1a, #32cd32);
+    background: linear-gradient(to left, #1a7d1a, #32cd32);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -100,10 +101,10 @@ nav button {
  
 /* ─── MAIN ─── */
 main {
-    margin-top: 200px;
+    margin-top: 100px;
     min-height: calc(100vh - 100px);
     display: flex;
-    justify-content: space-between;
+    
     align-items: center;
     padding: 50px 80px;
 }
@@ -230,7 +231,6 @@ input[type="submit"]:active {
 /* ─── FOOTER ─── */
 :root {
     --green: #2ecc40;
-    --dark: #111;
     --white: #fff;
 }
  
@@ -356,124 +356,12 @@ footer {
     height: 48px;
     background: rgba(255, 255, 255, 0.15);
 }
- 
-/* ─── RESPONSIVO MOBILE─── */
 
-@media (max-width: 768px) {
-    /* Header */
-    header {
-        height: auto;
-        padding: 14px 20px;
-        flex-wrap: wrap;
-        gap: 10px;
-        position: fixed;
-    }
  
-    header h1 {
-        font-size: 26px;
-    }
- 
-    nav {
-        gap: 10px;
-        flex-wrap: wrap;
-    }
- 
-    nav button {
-        padding: 8px 16px;
-        font-size: 13px;
-        border-radius: 8px;
-    }
- 
-    /* Main */
-    main {
-        margin-top: 130px;
-        padding: 30px 20px;
-        flex-direction: column;
-        gap: 48px;
-        min-height: unset;
-    }
- 
-    .left-side,
-    .right-side {
-        width: 100%;
-    }
- 
-    .left-side h2,
-    .left-side h2 span {
-        font-size: clamp(40px, 12vw, 60px);
-    }
- 
-    .left-side p {
-        font-size: clamp(24px, 8vw, 36px);
-        margin-top: 24px;
-    }
- 
-    /* Form / login */
-    .right-side h3 {
-        font-size: 24px;
-    }
- 
-    .right-side h1 {
-        font-size: 20px;
-    }
- 
-    form {
-        margin-top: 30px;
-        gap: 20px;
-    }
- 
-    input[type="email"],
-    input[type="password"] {
-        height: 60px;
-        font-size: 18px;
-        border-radius: 14px;
-    }
- 
-    input[type="submit"] {
-        height: 60px;
-        font-size: 18px;
-        border-radius: 14px;
-    }
- 
-    .register {
-        font-size: 15px;
-        flex-direction: column;
-        gap: 8px;
-        align-items: center;
-    }
- 
-    /* Footer */
-    footer {
-        padding: 32px 20px 20px;
-    }
- 
-    .footer-top {
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-    }
- 
-    .footer-bottom {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-    }
- 
-    /* Stats */
-    .stats {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
-        padding: 28px 20px;
-    }
- 
-    .stat-divider {
-        display: none;
-    }
-}
-
 /*  RESPONSIVO — TABLET  (≤ 1024px) */
 @media (max-width: 1024px) {
     header {
+        height: 80px;
         padding: 0 30px;
     }
  
@@ -485,13 +373,18 @@ footer {
         padding: 10px 20px;
         font-size: 14px;
     }
+
+    .trabai{
+        margin-top: 80px;
+    }
  
     main {
+        margin-top: 0;
         padding: 40px 40px;
-        margin-top: 160px;
         flex-direction: column;
         align-items: flex-start;
         gap: 60px;
+        min-height: unset;
     }
  
     .left-side,
@@ -505,8 +398,10 @@ footer {
     }
  
     .left-side p {
-        font-size: 42px;
-        margin-top: 40px;
+        font-size: 32px;
+        padding-bottom: 30px;
+        margin-top: 20px;
+        letter-spacing: 2px;
     }
  
     .right-side h3 {
@@ -519,3 +414,123 @@ footer {
         flex-wrap: wrap;
     }
 }
+
+/* ─── RESPONSIVO MOBILE─── */
+@media (max-width: 768px) {
+
+    /* Header */
+    header {
+        height: 65px;
+        padding: 0px 20px;
+    }
+ 
+    header h1 {
+        font-size: 26px;
+    }
+ 
+    nav {
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+ 
+    nav button {
+        padding: 6px 12px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+
+    /*Bannar*/
+    .trabai{
+        height: 280px;
+        margin-top: 64px;
+    }
+
+    .sla-overlay h2,
+    .sla-overlay span {
+        font-size:  clamp(28px, 8vw, 44px);
+    }
+
+    /* Main */
+    main {
+        margin-top: 0;
+        padding: 30px 16px;
+        gap: 40px;
+    }
+ 
+    .left-side,
+    .right-side {
+        width: 100%;
+    }
+
+ 
+    .left-side p {
+        font-size: clamp(28px, 9vw, 40px);
+        letter-spacing: 1px;
+        padding-bottom: 0;
+        text-align: center;
+        
+    }
+ 
+    /* Form / login */
+    .right-side h3 {
+        font-size: 22px;
+    }
+ 
+    .right-side h1 {
+        font-size: 18px;
+    }
+ 
+    form {
+        margin-top: 24px;
+        gap: 18px;
+    }
+ 
+    input[type="email"],
+    input[type="password"] {
+        height: 56px;
+        font-size: 16px;
+        border-radius: 14px;
+    }
+ 
+    input[type="submit"] {
+        height: 56px;
+        font-size: 16px;
+        border-radius: 14px;
+    }
+ 
+    .register {
+        font-size: 15px;
+        flex-direction: column;
+        gap: 6px;
+        align-items: center;
+    }
+ 
+    /* Footer */
+    footer {
+        padding: 28px 16px 16px;
+    }
+ 
+    .footer-top {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+ 
+    .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+ 
+    /* Stats */
+    .stats {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 24px 16px;
+    }
+ 
+    .stat-divider {
+        display: none;
+    }
+}
+

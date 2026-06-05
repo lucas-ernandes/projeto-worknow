@@ -143,7 +143,7 @@ function validarData(str) {
     if (data.getFullYear() !== a || data.getMonth() !== m - 1 || data.getDate() !== d) return false;
     const hoje = new Date();
     const idade = hoje.getFullYear() - a - (hoje < new Date(hoje.getFullYear(), m - 1, d) ? 1 : 0);
-    return idade >= 14 && idade <= 120;
+    return idade >= 16 && idade <= 120;
 }
  
  
@@ -174,7 +174,7 @@ function validarForm(e) {
     const nascVal = document.getElementById('nascimento').value;
     if (!validarData(nascVal)) {
         document.getElementById('erro-nascimento').textContent =
-            'Data inválida ou idade fora do permitido (14–120 anos).';
+            'Data inválida ou idade fora do permitido (16–120 anos).';
         ok = false;
     }
  
