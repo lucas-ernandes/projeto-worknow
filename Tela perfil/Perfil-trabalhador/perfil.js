@@ -320,7 +320,18 @@ function mostrarToast(msg) {
    INIT
 ═══════════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', () => {
-    calcularCompletude();
+     calcularCompletude();
     renderNotificacoes();
     atualizarBadge();
+
+    const hash = window.location.hash.replace('#', '');
+
+    if (hash === 'habilidade') {
+        irAba('profissional');
+
+        setTimeout(() => {
+            document.getElementById('habilidade')
+                ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+    }
 });
