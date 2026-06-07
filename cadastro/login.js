@@ -43,19 +43,16 @@ let tipoAtual = 'trabalhador';
  
 function selecionarTipo(tipo) {
     tipoAtual = tipo;
+    const extEmp = document.getElementById('campos-empregador');
  
-    const extTrab = document.getElementById('campos-trabalhador');
-    const extEmp  = document.getElementById('campos-empregador');
- 
-    if (tipo === 'trabalhador') {
-        extTrab.classList.add('visivel');
-        extEmp.classList.remove('visivel');
-    } else {
-        extTrab.classList.remove('visivel');
+    if (tipo === 'empregador') {
         extEmp.classList.add('visivel');
+    } else {
+        extEmp.classList.remove('visivel');
     }
 }
- 
+
+
 window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('campos-trabalhador').classList.add('visivel');
 });
