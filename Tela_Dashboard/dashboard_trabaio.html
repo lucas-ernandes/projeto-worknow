@@ -11,11 +11,9 @@
 </head>
 <body>
 
-    <!-- ══════════════ HEADER ══════════════ -->
     <header class="dash-header">
         <h1><span class="logo-work">Work</span><span class="logo-now">NOW</span></h1>
 
-        <!-- BUSCA CENTRAL -->
         <div class="header-busca">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                  fill="none" stroke="currentColor" stroke-width="2.5">
@@ -26,7 +24,6 @@
         </div>
 
         <nav class="dash-nav">
-            <!-- SININHO -->
             <div class="notif-wrapper">
                 <button class="btn-notificacao" onclick="toggleNotificacoes()" aria-label="Notificações">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
@@ -46,7 +43,6 @@
                 </div>
             </div>
 
-            <!-- AVATAR -->
             <div class="avatar-wrapper" onclick="toggleMenuPerfil()">
                 <div class="avatar-inicial" id="avatar-inicial">D</div>
                 <span class="avatar-nome">Daniel</span>
@@ -62,16 +58,17 @@
 
     <div class="dash-layout">
 
-        <!-- ══════════════ SIDEBAR ESQUERDA ══════════════ -->
+        <!-- SIDEBAR -->
         <aside class="dash-sidebar">
             <nav class="sidebar-nav">
-                <a class="sidebar-link ativo" href="#">
+                <a class="sidebar-link ativo" href="#" onclick="irView('painel', this); return false;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
                     Painel
                 </a>
-                <a class="sidebar-link" href="#">
+                <a class="sidebar-link" href="#" onclick="irView('candidaturas', this); return false;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
                     Minhas Candidaturas
+                    <span class="sidebar-badge" id="badge-candidaturas" style="display:none">0</span>
                 </a>
                 <a class="sidebar-link" href="#">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
@@ -88,7 +85,6 @@
                 </a>
             </nav>
 
-            <!-- COMPLETUDE DO PERFIL NA SIDEBAR -->
             <div class="sidebar-perfil-card">
                 <div class="sidebar-perfil-top">
                     <div class="sidebar-avatar">D</div>
@@ -99,122 +95,155 @@
                 </div>
                 <div class="sidebar-completude-label">
                     <span>Perfil completo</span>
-                    
+                    <strong>0%</strong>
                 </div>
                 <div class="barra-completude">
-                    <div class="barra-fill" style="width:60%"></div>
+                    <div class="barra-fill" style="width:0%"></div>
                 </div>
                 <a href="../Tela perfil/Perfil-trabalhador/perfil.html" class="sidebar-completar-btn">Completar perfil →</a>
             </div>
         </aside>
 
-        <!-- ══════════════ CONTEÚDO CENTRAL ══════════════ -->
+        <!-- CONTEÚDO CENTRAL -->
         <main class="dash-main">
 
-            <!-- BOAS VINDAS -->
-            <div class="boas-vindas">
-                <div>
-                    <h2>Bem-vindo de volta, <span id="nome-usuario">Daniel</span> 👋</h2>
-                    <p>Comece o dia encontrando o seu próximo desafio.</p>
+            <!-- ══ VIEW: PAINEL ══ -->
+            <div id="view-painel" style="display:flex; flex-direction:column; gap:20px">
+
+                <div class="boas-vindas">
+                    <div>
+                        <h2>Bem-vindo de volta, <span id="nome-usuario">Daniel</span> 👋</h2>
+                        <p>Comece o dia encontrando o seu próximo desafio.</p>
+                    </div>
+                    <a href="../Tela perfil/Perfil-trabalhador/perfil.html" class="btn-editar-perfil">Editar perfil</a>
                 </div>
-                <a href="../Tela perfil/Perfil-trabalhador/perfil.html" class="btn-editar-perfil">Editar perfil</a>
+
+                <div class="mini-stats">
+                    <div class="mini-stat">
+                        <span class="mini-stat-label">Candidaturas</span>
+                        <span class="mini-stat-numero" id="stat-candidaturas">0</span>
+                    </div>
+                    <div class="mini-stat-divider"></div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-label">Andamento</span>
+                        <span class="mini-stat-numero" id="stat-andamento">0</span>
+                    </div>
+                    <div class="mini-stat-divider"></div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-label">Ganhos</span>
+                        <span class="mini-stat-numero">R$ 0</span>
+                    </div>
+                </div>
+
+                <div class="vagas-section">
+                    <div class="vagas-section-header">
+                        <h3>Vagas para você</h3>
+                        <span id="vagas-count" class="vagas-count">0 vagas encontradas</span>
+                    </div>
+
+                    <div class="filtros-bar">
+                        <select class="filtro-select" id="filtro-area" onchange="filtrarVagas()">
+                            <option value="">Todas as áreas</option>
+                            <option>Tecnologia da Informação</option>
+                            <option>Design & UX</option>
+                            <option>Marketing & Comunicação</option>
+                            <option>Construção Civil</option>
+                            <option>Saúde & Bem-estar</option>
+                            <option>Educação</option>
+                            <option>Logística & Transporte</option>
+                            <option>Gastronomia</option>
+                            <option>Administrativo & Financeiro</option>
+                        </select>
+                        <select class="filtro-select" id="filtro-tipo" onchange="filtrarVagas()">
+                            <option value="">Qualquer tipo</option>
+                            <option>CLT (Efetivo)</option>
+                            <option>Freelance / Projeto</option>
+                            <option>PJ</option>
+                            <option>Estágio</option>
+                            <option>Temporário</option>
+                        </select>
+                        <select class="filtro-select" id="filtro-modalidade" onchange="filtrarVagas()">
+                            <option value="">Qualquer modalidade</option>
+                            <option>Presencial</option>
+                            <option>Remoto</option>
+                            <option>Híbrido</option>
+                        </select>
+                        <select class="filtro-select" id="filtro-nivel" onchange="filtrarVagas()">
+                            <option value="">Qualquer nível</option>
+                            <option>Sem experiência / Iniciante</option>
+                            <option>Júnior (1–2 anos)</option>
+                            <option>Pleno (3–5 anos)</option>
+                            <option>Sênior (5+ anos)</option>
+                        </select>
+                        <button class="btn-limpar-filtros" onclick="limparFiltros()">✕ Limpar</button>
+                    </div>
+
+                    <div class="filtros-rapidos">
+                        <button class="tag-filtro ativo" onclick="filtroRapido(this, '')">Todos</button>
+                        <button class="tag-filtro" onclick="filtroRapido(this, 'Remoto')">🌐 Remoto</button>
+                        <button class="tag-filtro" onclick="filtroRapido(this, 'Freelance / Projeto')">⚡ Freelance</button>
+                        <button class="tag-filtro" onclick="filtroRapido(this, 'Estágio')">🎓 Estágio</button>
+                        <button class="tag-filtro" onclick="filtroRapido(this, 'CLT (Efetivo)')">📋 CLT</button>
+                    </div>
+
+                    <div id="lista-vagas" class="lista-vagas"></div>
+
+                    <div id="sem-resultados" class="sem-resultados" style="display:none">
+                        <span>🔍</span>
+                        <p>Nenhuma vaga encontrada com esses filtros.</p>
+                        <button onclick="limparFiltros()">Limpar filtros</button>
+                    </div>
+                </div>
             </div>
 
-            <!-- MINI STATS -->
-            <div class="mini-stats">
-                <div class="mini-stat">
-                    <span class="mini-stat-label">Candidaturas</span>
-                    <span class="mini-stat-numero">0</span>
+            <!-- ══ VIEW: MINHAS CANDIDATURAS ══ -->
+            <div id="view-candidaturas" style="display:none; flex-direction:column; gap:20px">
+
+                <div class="cand-header-section">
+                    <div>
+                        <h2>📋 Minhas Candidaturas</h2>
+                        <p>Acompanhe o status de todas as suas candidaturas.</p>
+                    </div>
+                    <button class="btn-editar-perfil" onclick="irView('painel', document.querySelector('.sidebar-link'))">
+                        ← Ver vagas
+                    </button>
                 </div>
 
-                <div class="mini-stat-divider"></div>
-                <div class="mini-stat">
-                    <span class="mini-stat-label">Andamento</span>
-                    <span class="mini-stat-numero">1</span>
-                </div>
-                
-                <div class="mini-stat-divider"></div>
-                <div class="mini-stat">
-                    <span class="mini-stat-label">Ganhos</span>
-                    <span class="mini-stat-numero">R$ 0</span>
-                </div>
-            </div>
-
-            <!-- BUSCA + FILTROS -->
-            <div class="vagas-section">
-                <div class="vagas-section-header">
-                    <h3>Vagas para você</h3>
-                    <span id="vagas-count" class="vagas-count">0 vagas encontradas</span>
+                <!-- MINI STATS CANDIDATURAS -->
+                <div class="mini-stats">
+                    <div class="mini-stat">
+                        <span class="mini-stat-label">Total</span>
+                        <span class="mini-stat-numero" id="cand-total">0</span>
+                    </div>
+                    <div class="mini-stat-divider"></div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-label">Em andamento</span>
+                        <span class="mini-stat-numero" id="cand-andamento">0</span>
+                    </div>
+                    <div class="mini-stat-divider"></div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-label">Aprovadas</span>
+                        <span class="mini-stat-numero" id="cand-aprovadas">0</span>
+                    </div>
                 </div>
 
-                <!-- FILTROS -->
-                <div class="filtros-bar">
-                    <select class="filtro-select" id="filtro-area" onchange="filtrarVagas()">
-                        <option value="">Todas as áreas</option>
-                        <option>Tecnologia da Informação</option>
-                        <option>Design & UX</option>
-                        <option>Marketing & Comunicação</option>
-                        <option>Construção Civil</option>
-                        <option>Saúde & Bem-estar</option>
-                        <option>Educação</option>
-                        <option>Logística & Transporte</option>
-                        <option>Gastronomia</option>
-                        <option>Administrativo & Financeiro</option>
-                    </select>
+                <!-- LISTA -->
+                <div id="lista-candidaturas" class="lista-vagas"></div>
 
-                    <select class="filtro-select" id="filtro-tipo" onchange="filtrarVagas()">
-                        <option value="">Qualquer tipo</option>
-                        <option>CLT (Efetivo)</option>
-                        <option>Freelance / Projeto</option>
-                        <option>PJ</option>
-                        <option>Estágio</option>
-                        <option>Temporário</option>
-                    </select>
-
-                    <select class="filtro-select" id="filtro-modalidade" onchange="filtrarVagas()">
-                        <option value="">Qualquer modalidade</option>
-                        <option>Presencial</option>
-                        <option>Remoto</option>
-                        <option>Híbrido</option>
-                    </select>
-
-                    <select class="filtro-select" id="filtro-nivel" onchange="filtrarVagas()">
-                        <option value="">Qualquer nível</option>
-                        <option>Sem experiência / Iniciante</option>
-                        <option>Júnior (1–2 anos)</option>
-                        <option>Pleno (3–5 anos)</option>
-                        <option>Sênior (5+ anos)</option>
-                    </select>
-
-                    <button class="btn-limpar-filtros" onclick="limparFiltros()">✕ Limpar</button>
-                </div>
-
-                <!-- TAGS DE FILTRO RÁPIDO -->
-                <div class="filtros-rapidos">
-                    <button class="tag-filtro ativo" onclick="filtroRapido(this, '')">Todos</button>
-                    <button class="tag-filtro" onclick="filtroRapido(this, 'Remoto')">🌐 Remoto</button>
-                    <button class="tag-filtro" onclick="filtroRapido(this, 'Freelance / Projeto')">⚡ Freelance</button>
-                    <button class="tag-filtro" onclick="filtroRapido(this, 'Estágio')">🎓 Estágio</button>
-                    <button class="tag-filtro" onclick="filtroRapido(this, 'CLT (Efetivo)')">📋 CLT</button>
-                </div>
-
-                <!-- LISTA DE VAGAS -->
-                <div id="lista-vagas" class="lista-vagas"></div>
-
-                <!-- SEM RESULTADOS -->
-                <div id="sem-resultados" class="sem-resultados" style="display:none">
-                    <span>🔍</span>
-                    <p>Nenhuma vaga encontrada com esses filtros.</p>
-                    <button onclick="limparFiltros()">Limpar filtros</button>
+                <!-- VAZIO -->
+                <div id="candidaturas-vazio" class="sem-resultados">
+                    <span>📭</span>
+                    <p>Você ainda não se candidatou a nenhuma vaga.</p>
+                    <button onclick="irView('painel', document.querySelector('.sidebar-link'))">
+                        Explorar vagas
+                    </button>
                 </div>
             </div>
 
         </main>
 
-        <!-- ══════════════ PAINEL DIREITO ══════════════ -->
+        <!-- PAINEL DIREITO -->
         <aside class="dash-right">
-
-            <!-- COMPETÊNCIAS DO PERFIL -->
             <div class="right-card">
                 <h4>Suas habilidades</h4>
                 <div class="habilidades-lista" id="habilidades-lista">
@@ -224,22 +253,17 @@
                     <span class="habilidade-tag">CSS</span>
                     <span class="habilidade-tag">Node.js</span>
                 </div>
-                <a href="../Tela perfil/Perfil-trabalhador/perfil.html#habilidade" class="right-link">Editar habilidades →</a>
+                <a href="../Tela perfil/Perfil-trabalhador/perfil.html" class="right-link">Editar habilidades →</a>
             </div>
-
-            <!-- VAGAS RECOMENDADAS (baseadas nas habilidades) -->
             <div class="right-card">
                 <h4>Recomendadas para você</h4>
                 <div id="vagas-recomendadas" class="recomendadas-lista"></div>
             </div>
-
-            <!-- DICA DO DIA -->
             <div class="right-card dica-card">
                 <h4>💡 Dica</h4>
-                <p id="dica-texto">Perfis com foto e bio completa recebem <strong>3x mais</strong> propostas de empregadores.</p>
+                <p>Perfis com foto e bio completa recebem <strong>3x mais</strong> propostas de empregadores.</p>
                 <a href="../Tela perfil/Perfil-trabalhador/perfil.html" class="right-link">Completar meu perfil →</a>
             </div>
-
         </aside>
 
     </div>

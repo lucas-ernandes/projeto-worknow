@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   DADOS DE EXEMPLO 
+   DADOS DE EXEMPLO
 
    Backend:
    Substituir este array pelos dados retornados
@@ -7,19 +7,10 @@
 
    Estrutura esperada:
    {
-      id,
-      empresa,
-      titulo,
-      area,
-      tipo,
-      modalidade,
-      nivel,
-      local,
-      orcamento,
-      prazo,
-      descricao,
-      habilidades[],
-      destaque
+      id, empresa, inicialEmpresa, corEmpresa,
+      titulo, area, tipo, modalidade, nivel,
+      local, orcamento, prazo, descricao,
+      habilidades[], destaque
    }
 ═══════════════════════════════════════════ */
 const vagasDB = [
@@ -30,8 +21,7 @@ const vagasDB = [
         nivel: 'Júnior (1–2 anos)', local: 'São Paulo, SP',
         orcamento: 'R$ 3.000 – R$ 4.500/mês', prazo: 'Imediato',
         descricao: 'Buscamos um dev front-end para trabalhar com React e TypeScript em projetos de e-commerce de alta escala.',
-        habilidades: ['React', 'TypeScript', 'CSS', 'Git'],
-        destaque: true,
+        habilidades: ['React', 'TypeScript', 'CSS', 'Git'], destaque: true,
     },
     {
         id: 2, empresa: 'EdTech Solutions', inicialEmpresa: 'E', corEmpresa: '#2ecc40',
@@ -40,8 +30,7 @@ const vagasDB = [
         nivel: 'Pleno (3–5 anos)', local: 'Remoto',
         orcamento: 'R$ 2.500 por projeto', prazo: '30 dias',
         descricao: 'Redesign completo de plataforma EAD. Precisamos de alguém que domine Figma e tenha experiência com pesquisa de usuário.',
-        habilidades: ['Figma', 'UX Research', 'Prototipagem'],
-        destaque: false,
+        habilidades: ['Figma', 'UX Research', 'Prototipagem'], destaque: false,
     },
     {
         id: 3, empresa: 'Construtora RJ', inicialEmpresa: 'C', corEmpresa: '#f59e0b',
@@ -50,8 +39,7 @@ const vagasDB = [
         nivel: 'Sem experiência / Iniciante', local: 'Rio de Janeiro, RJ',
         orcamento: 'R$ 150/dia', prazo: '2 semanas',
         descricao: 'Instalação e manutenção elétrica em condomínio residencial. Necessário NR10 e experiência comprovada.',
-        habilidades: ['NR10', 'Instalação elétrica'],
-        destaque: false,
+        habilidades: ['NR10', 'Instalação elétrica'], destaque: false,
     },
     {
         id: 4, empresa: 'Agência Criativa', inicialEmpresa: 'A', corEmpresa: '#8b5cf6',
@@ -60,8 +48,7 @@ const vagasDB = [
         nivel: 'Júnior (1–2 anos)', local: 'Remoto',
         orcamento: 'R$ 1.800/mês', prazo: 'Contrato por 6 meses',
         descricao: 'Produção de conteúdo para redes sociais de clientes do segmento de moda e lifestyle. Domínio de Canva e pacote Adobe.',
-        habilidades: ['Canva', 'Instagram', 'Copywriting', 'Adobe'],
-        destaque: false,
+        habilidades: ['Canva', 'Instagram', 'Copywriting', 'Adobe'], destaque: false,
     },
     {
         id: 5, empresa: 'StartupXYZ', inicialEmpresa: 'S', corEmpresa: '#e53e3e',
@@ -70,8 +57,7 @@ const vagasDB = [
         nivel: 'Pleno (3–5 anos)', local: 'Remoto',
         orcamento: 'R$ 6.000 – R$ 8.000/mês', prazo: 'Imediato',
         descricao: 'Vaga para dev full stack em startup de fintech. Stack: Node.js, React, PostgreSQL. Ambiente ágil e cultura de inovação.',
-        habilidades: ['Node.js', 'React', 'PostgreSQL', 'Docker'],
-        destaque: true,
+        habilidades: ['Node.js', 'React', 'PostgreSQL', 'Docker'], destaque: true,
     },
     {
         id: 6, empresa: 'Escola Aprender', inicialEmpresa: 'E', corEmpresa: '#06b6d4',
@@ -80,8 +66,7 @@ const vagasDB = [
         nivel: 'Sem experiência / Iniciante', local: 'Teresina, PI',
         orcamento: 'R$ 50/hora', prazo: 'Indeterminado',
         descricao: 'Aulas de reforço de matemática para alunos do ensino médio. Horários flexíveis, 2x por semana.',
-        habilidades: ['Matemática', 'Didática'],
-        destaque: false,
+        habilidades: ['Matemática', 'Didática'], destaque: false,
     },
     {
         id: 7, empresa: 'LogFast', inicialEmpresa: 'L', corEmpresa: '#111',
@@ -90,8 +75,7 @@ const vagasDB = [
         nivel: 'Sem experiência / Iniciante', local: 'Teresina, PI',
         orcamento: 'R$ 80/dia + comissão', prazo: 'Imediato',
         descricao: 'Entregas de encomendas na região metropolitana. CNH B obrigatória. Moto própria é diferencial.',
-        habilidades: ['CNH B', 'Roteirização'],
-        destaque: false,
+        habilidades: ['CNH B', 'Roteirização'], destaque: false,
     },
     {
         id: 8, empresa: 'DesignStudio', inicialEmpresa: 'D', corEmpresa: '#ec4899',
@@ -100,18 +84,171 @@ const vagasDB = [
         nivel: 'Sem experiência / Iniciante', local: 'São Paulo, SP',
         orcamento: 'R$ 900/mês + benefícios', prazo: 'Imediato',
         descricao: 'Estágio em studio criativo. Vai aprender branding, identidade visual e motion. Preferência para estudantes de Design.',
-        habilidades: ['Illustrator', 'Photoshop', 'InDesign'],
-        destaque: false,
+        habilidades: ['Illustrator', 'Photoshop', 'InDesign'], destaque: false,
     },
 ];
 
+// Status possíveis de candidatura
+const STATUS = {
+    enviada:  { label: 'Enviada',     cor: '#6b7280', bg: '#f3f4f6' },
+    analise:  { label: 'Em análise',  cor: '#d97706', bg: '#fffbeb' },
+    aprovada: { label: 'Aprovada ✓',  cor: '#1a7d1a', bg: '#e8f8ea' },
+    recusada: { label: 'Recusada',    cor: '#e53e3e', bg: '#fef2f2' },
+};
+
+// Candidaturas do usuário { vagaId, status, data }
+const candidaturas = [];
+
 let filtroRapidoAtivo = '';
 let vagasFavoritas = new Set();
+let viewAtual = 'painel';
+
+
+/* ═══════════════════════════════════════════
+   NAVEGAÇÃO DA SIDEBAR
+   Alterna entre o Painel e Minhas Candidaturas
+   sem recarregar a página.
+═══════════════════════════════════════════ */
+function irView(view, linkEl) {
+    viewAtual = view;
+
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('ativo'));
+    if (linkEl) linkEl.classList.add('ativo');
+
+    if (view === 'painel') {
+        document.getElementById('view-painel').style.display = 'flex';
+        document.getElementById('view-candidaturas').style.display = 'none';
+    } else {
+        document.getElementById('view-painel').style.display = 'none';
+        document.getElementById('view-candidaturas').style.display = 'flex';
+        renderCandidaturas();
+    }
+}
+
+
+/* ═══════════════════════════════════════════
+   CANDIDATURAS – RENDER
+   Exibe os cards das vagas em que o usuário
+   se candidatou, com status e ações.
+
+   Backend:
+   Carregar candidaturas do usuário logado.
+   POST /candidaturas → candidatar
+   DELETE /candidaturas/{id} → cancelar
+═══════════════════════════════════════════ */
+function renderCandidaturas() {
+    const container   = document.getElementById('lista-candidaturas');
+    const vazio       = document.getElementById('candidaturas-vazio');
+    const totalEl     = document.getElementById('cand-total');
+    const andamentoEl = document.getElementById('cand-andamento');
+    const aprovEl     = document.getElementById('cand-aprovadas');
+
+    const emAndamento = candidaturas.filter(c => c.status === 'analise').length;
+    const aprovadas   = candidaturas.filter(c => c.status === 'aprovada').length;
+
+    if (totalEl)     totalEl.textContent     = candidaturas.length;
+    if (andamentoEl) andamentoEl.textContent = emAndamento;
+    if (aprovEl)     aprovEl.textContent     = aprovadas;
+
+    if (!candidaturas.length) {
+        container.innerHTML = '';
+        vazio.style.display = 'flex';
+        return;
+    }
+
+    vazio.style.display = 'none';
+
+    container.innerHTML = candidaturas.map(c => {
+        const vaga   = vagasDB.find(v => v.id === c.vagaId);
+        const status = STATUS[c.status];
+        if (!vaga) return '';
+
+        return `
+        <div class="cand-card">
+            <div class="cand-card-top">
+                <div class="vaga-empresa-logo" style="background:${vaga.corEmpresa}">${vaga.inicialEmpresa}</div>
+                <div class="cand-info">
+                    <h3>${vaga.titulo}</h3>
+                    <span>${vaga.empresa} · ${vaga.local}</span>
+                    <span class="cand-data">Enviada em ${c.data}</span>
+                </div>
+                <span class="cand-status" style="color:${status.cor}; background:${status.bg}">
+                    ${status.label}
+                </span>
+            </div>
+
+            <div class="vaga-tags" style="margin-top:10px">
+                <span class="vaga-tag">${vaga.tipo}</span>
+                <span class="vaga-tag">${vaga.modalidade}</span>
+                <span class="vaga-tag">${vaga.nivel}</span>
+            </div>
+
+            <div class="cand-valores">
+                <span>💰 ${vaga.orcamento}</span>
+                <span>📅 Prazo: ${vaga.prazo}</span>
+            </div>
+
+            <div class="cand-acoes">
+                ${c.status === 'enviada' || c.status === 'analise' ? `
+                    <button class="btn-cancelar-cand" onclick="cancelarCandidatura(${c.vagaId})">
+                        Cancelar candidatura
+                    </button>` : ''}
+                ${c.status === 'recusada' ? `
+                    <button class="btn-candidatar" onclick="recandidatar(${c.vagaId})"
+                            style="font-size:13px;padding:10px 18px">
+                        Tentar novamente
+                    </button>` : ''}
+            </div>
+        </div>`;
+    }).join('');
+
+    atualizarBadgeCandidaturas();
+}
+
+function cancelarCandidatura(vagaId) {
+    const idx = candidaturas.findIndex(c => c.vagaId === vagaId);
+    if (idx === -1) return;
+    candidaturas.splice(idx, 1);
+
+    // reativa o botão no painel de vagas
+    const btnPainel = document.querySelector(`[data-vaga-id="${vagaId}"]`);
+    if (btnPainel) {
+        btnPainel.textContent = 'Ver detalhes / Candidatar-se';
+        btnPainel.classList.remove('candidatado');
+        btnPainel.disabled = false;
+    }
+
+    atualizarStatsCandidaturas();
+    renderCandidaturas();
+    mostrarToast('✓ Candidatura cancelada.');
+}
+
+function recandidatar(vagaId) {
+    const cand = candidaturas.find(c => c.vagaId === vagaId);
+    if (cand) cand.status = 'enviada';
+    renderCandidaturas();
+    mostrarToast('🚀 Candidatura reenviada!');
+}
+
+function atualizarBadgeCandidaturas() {
+    const badge = document.getElementById('badge-candidaturas');
+    if (!badge) return;
+    badge.textContent = candidaturas.length;
+    badge.style.display = candidaturas.length > 0 ? 'inline-flex' : 'none';
+}
+
+function atualizarStatsCandidaturas() {
+    const totalEl     = document.getElementById('stat-candidaturas');
+    const andamentoEl = document.getElementById('stat-andamento');
+    if (totalEl)     totalEl.textContent     = candidaturas.length;
+    if (andamentoEl) andamentoEl.textContent =
+        candidaturas.filter(c => c.status === 'analise' || c.status === 'aprovada').length;
+}
+
 
 /* ═══════════════════════════════════════════
    RENDERIZAR VAGAS
-   Recebe uma lista de vagas e monta os cards
-   exibidos para o usuário.
+   Recebe uma lista de vagas e monta os cards.
 
    Backend: não precisa alterar esta função.
    Basta fornecer os dados das vagas.
@@ -130,6 +267,8 @@ function renderVagas(lista) {
 
     semRes.style.display = 'none';
     count.textContent = `${lista.length} vaga${lista.length !== 1 ? 's' : ''} encontrada${lista.length !== 1 ? 's' : ''}`;
+
+    const jaCandidatou = id => candidaturas.some(c => c.vagaId === id);
 
     container.innerHTML = lista.map(v => `
         <div class="vaga-card ${v.destaque ? 'destaque' : ''}">
@@ -164,19 +303,21 @@ function renderVagas(lista) {
                     <span class="vaga-orcamento">💰 ${v.orcamento}</span>
                     <span class="vaga-prazo">📅 ${v.prazo}</span>
                 </div>
-                <button class="btn-candidatar" onclick="candidatar(${v.id}, this)">
-                    Ver detalhes / Candidatar-se
+                <button
+                    class="btn-candidatar ${jaCandidatou(v.id) ? 'candidatado' : ''}"
+                    data-vaga-id="${v.id}"
+                    onclick="candidatar(${v.id}, this)"
+                    ${jaCandidatou(v.id) ? 'disabled' : ''}>
+                    ${jaCandidatou(v.id) ? '✓ Candidatura enviada!' : 'Ver detalhes / Candidatar-se'}
                 </button>
             </div>
         </div>
     `).join('');
 }
 
+
 /* ═══════════════════════════════════════════
    BUSCA E FILTROS
-
-   Utiliza os filtros selecionados pelo usuário
-   e exibe apenas as vagas compatíveis.
 
    Backend:
    Os filtros podem futuramente ser enviados
@@ -224,17 +365,17 @@ function limparFiltros() {
     document.getElementById('filtro-nivel').selectedIndex = 0;
     filtroRapidoAtivo = '';
     document.querySelectorAll('.tag-filtro').forEach(b => b.classList.remove('ativo'));
-    document.querySelector('.tag-filtro').classList.add('ativo'); // "Todos"
+    document.querySelector('.tag-filtro').classList.add('ativo');
     renderVagas(vagasDB);
 }
 
+
 /* ═══════════════════════════════════════════
    FAVORITAR VAGA
-    Backend:
-   Salvar/remover favorito do usuário no banco.
-   Exemplo:
-   POST /favoritos
-   DELETE /favoritos/{id}
+
+   Backend:
+   POST /favoritos → salvar
+   DELETE /favoritos/{id} → remover
 ═══════════════════════════════════════════ */
 function toggleFavorito(id, btn) {
     if (vagasFavoritas.has(id)) {
@@ -249,24 +390,35 @@ function toggleFavorito(id, btn) {
     }
 }
 
+
 /* ═══════════════════════════════════════════
    CANDIDATAR-SE
 
    Backend:
-   Inserir candidatura no banco e retornar
-   confirmação ao usuário.
+   POST /candidaturas → inserir candidatura
+   e retornar confirmação ao usuário.
 ═══════════════════════════════════════════ */
 function candidatar(id, btn) {
+    if (candidaturas.some(c => c.vagaId === id)) return;
+
+    candidaturas.push({
+        vagaId: id,
+        status: 'enviada',
+        data: new Date().toLocaleDateString('pt-BR'),
+    });
+
     btn.textContent = '✓ Candidatura enviada!';
     btn.classList.add('candidatado');
     btn.disabled = true;
-    mostrarToast('🚀 Candidatura enviada com sucesso!');
+
+    atualizarStatsCandidaturas();
+    atualizarBadgeCandidaturas();
+    mostrarToast('🚀 Candidatura enviada! Veja em Minhas Candidaturas.');
 }
+
 
 /* ═══════════════════════════════════════════
    VAGAS RECOMENDADAS (painel direito)
-
-   Atualmente usa habilidades fixas.
 
    Backend:
    Carregar habilidades do perfil do usuário
@@ -281,7 +433,7 @@ function renderRecomendadas() {
     })).sort((a, b) => b.match - a.match).slice(0, 3);
 
     document.getElementById('vagas-recomendadas').innerHTML = pontuadas.map(v => `
-        <div class="recomendada-item" onclick="scrollParaVaga(${v.id})">
+        <div class="recomendada-item" onclick="mostrarToast('Em breve: detalhe da vaga 👀')">
             <div class="recomendada-logo" style="background:${v.corEmpresa}">${v.inicialEmpresa}</div>
             <div class="recomendada-info">
                 <strong>${v.titulo}</strong>
@@ -292,10 +444,6 @@ function renderRecomendadas() {
     `).join('');
 }
 
-function scrollParaVaga(id) {
-    // futuramente abre modal de detalhe da vaga
-    mostrarToast('Em breve: detalhe da vaga 👀');
-}
 
 /* ═══════════════════════════════════════════
    NOTIFICAÇÕES
@@ -303,7 +451,6 @@ function scrollParaVaga(id) {
    Backend:
    Carregar notificações do usuário logado.
    Marcação de leitura deve ser salva no banco.
-
 ═══════════════════════════════════════════ */
 const notificacoes = [
     { icone: '💼', texto: 'TechStore visualizou seu perfil.', tempo: 'Agora há pouco', lida: false },
@@ -349,14 +496,12 @@ function atualizarBadge() {
     badge.style.display = naoLidas > 0 ? 'flex' : 'none';
 }
 
-/* ═══════════════════════════════════════════
-   DROPDOWN AVATAR ou  MENU DE PERFIL
 
-   Responsável por abrir e fechar o menu
-   do usuário no canto superior da tela.
+/* ═══════════════════════════════════════════
+   DROPDOWN AVATAR / MENU DE PERFIL
 
    Backend:
-   Os links podem futuramente apontar para:
+   Links podem apontar para:
    - Perfil do usuário
    - Configurações
    - Logout
@@ -372,6 +517,7 @@ document.addEventListener('click', (e) => {
     if (!e.target.closest('.notif-wrapper'))
         document.getElementById('dropdown-notif')?.classList.remove('aberto');
 });
+
 
 /* ═══════════════════════════════════════════
    TOAST
@@ -390,10 +536,9 @@ function mostrarToast(msg) {
     setTimeout(() => toast.classList.remove('visivel'), 3000);
 }
 
+
 /* ═══════════════════════════════════════════
    INIT
-
-   Executado quando a página termina de carregar.
 
    Backend:
    Aqui podem ser chamadas APIs para buscar:
@@ -401,10 +546,12 @@ function mostrarToast(msg) {
    - Vagas
    - Notificações
    - Favoritos
+   - Candidaturas
 ═══════════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', () => {
     renderVagas(vagasDB);
     renderRecomendadas();
     renderNotificacoes();
     atualizarBadge();
+    atualizarBadgeCandidaturas();
 });
