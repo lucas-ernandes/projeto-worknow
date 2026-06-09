@@ -37,7 +37,7 @@ function mostrarInfo(tipo, el) {
  
  
 /* ═══════════════════════════════════════════
-   RADIO DO FORMULÁRIO – controla campos extras
+   RADIO DO FORMULÁRIO 
 ═══════════════════════════════════════════ */
 let tipoAtual = 'trabalhador';
  
@@ -45,18 +45,20 @@ function selecionarTipo(tipo) {
     tipoAtual = tipo;
     const extEmp = document.getElementById('campos-empregador');
  
-    if (tipo === 'empregador') {
-        extEmp.classList.add('visivel');
-    } else {
-        extEmp.classList.remove('visivel');
+    // Se você removeu a div do HTML, essa checagem evita erros no console
+    if (extEmp) {
+        if (tipo === 'empregador') {
+            extEmp.classList.add('visivel');
+        } else {
+            extEmp.classList.remove('visivel');
+        }
     }
 }
 
+/* ═══════════════════════════════════════════
+   MÁSCARAS DE FORMATAÇÃO AUTOMÁTICA
+═══════════════════════════════════════════ */
 
-window.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('campos-trabalhador').classList.add('visivel');
-});
- 
 /* MÁSCARA – CPF  →  000.000.000-00 */
 document.getElementById('cpf').addEventListener('input', function () {
     let v = this.value.replace(/\D/g, '').slice(0, 11);
@@ -67,8 +69,30 @@ document.getElementById('cpf').addEventListener('input', function () {
     document.getElementById('erro-cpf').textContent = '';
 });
  
+/* MÁSCARA – DATA DE NASCIMENTO  →  DD/MM/AAAA */
+document.getElementById('nascimento').addEventListener('input', function () {
+    let v = this.value.replace(/\D/g, '').slice(0, 8);
+    if (v.length > 4)      v = v.replace(/(\d{2})(\d{2})(\d{0,4})/, '$1/$2/$3');
+    else if (v.length > 2) v = v.replace(/(\d{2})(\d{0,2})/,        '$1/$2');
+    this.value = v;
+    document.getElementById('erro-nascimento').textContent = '';
+});
  
-/* VALIDAÇÃO REAL DO CPF (algoritmo oficial) */
+/* MÁSCARA – TELEFONE  →  (00) 00000-0000 */
+document.getElementById('telefone').addEventListener('input', function () {
+    let v = this.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length > 10)     v = v.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+    else if (v.length > 6) v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+    else if (v.length > 2) v = v.replace(/(\d{2})(\d{0,5})/,        '($1) $2');
+    else if (v.length > 0) v = v.replace(/(\d{0,2})/,               '($1');
+    this.value = v;
+});
+
+/* ═══════════════════════════════════════════
+   FUNÇÕES DE VALIDAÇÃO (ALGORITMOS)
+═══════════════════════════════════════════ */
+
+/* VALIDAÇÃO REAL DO CPF */
 function validarCPF(cpf) {
     cpf = cpf.replace(/\D/g, '');
     if (cpf.length !== 11) return false;
@@ -88,49 +112,8 @@ function validarCPF(cpf) {
  
     return true;
 }
-/* MÁSCARA – CNPJ  →  00.000.000/0000-00 */
-document.getElementById('cnpj').addEventListener('input', function () {
-    let v = this.value.replace(/\D/g, '').slice(0, 14);
-    if (v.length > 12)      v = v.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, '$1.$2.$3/$4-$5');
-    else if (v.length > 8)  v = v.replace(/(\d{2})(\d{3})(\d{3})(\d{0,4})/,        '$1.$2.$3/$4');
-    else if (v.length > 5)  v = v.replace(/(\d{2})(\d{3})(\d{0,3})/,               '$1.$2.$3');
-    else if (v.length > 2)  v = v.replace(/(\d{2})(\d{0,3})/,                      '$1.$2');
-    this.value = v;
-    document.getElementById('erro-cnpj').textContent = '';
-});
- 
-/* VALIDAÇÃO REAL DO CNPJ (algoritmo oficial) */
-function validarCNPJ(cnpj) {
-    cnpj = cnpj.replace(/\D/g, '');
-    if (cnpj.length !== 14) return false;
-    if (/^(\d)\1{13}$/.test(cnpj)) return false; // todos iguais
- 
-    const calc = (c, len) => {
-        let soma = 0, pos = len - 7;
-        for (let i = len; i >= 1; i--) {
-            soma += parseInt(c[len - i]) * pos--;
-            if (pos < 2) pos = 9;
-        }
-        const r = soma % 11;
-        return r < 2 ? 0 : 11 - r;
-    };
- 
-    return (
-        calc(cnpj, 12) === parseInt(cnpj[12]) &&
-        calc(cnpj, 13) === parseInt(cnpj[13])
-    );
-}
- 
- 
-/* MÁSCARA – DATA DE NASCIMENTO  →  DD/MM/AAAA*/
-document.getElementById('nascimento').addEventListener('input', function () {
-    let v = this.value.replace(/\D/g, '').slice(0, 8);
-    if (v.length > 4)      v = v.replace(/(\d{2})(\d{2})(\d{0,4})/, '$1/$2/$3');
-    else if (v.length > 2) v = v.replace(/(\d{2})(\d{0,2})/,        '$1/$2');
-    this.value = v;
-    document.getElementById('erro-nascimento').textContent = '';
-});
- 
+
+/* VALIDAÇÃO DE DATA */
 function validarData(str) {
     if (str.length !== 10) return false;
     const [d, m, a] = str.split('/').map(Number);
@@ -143,19 +126,7 @@ function validarData(str) {
     return idade >= 16 && idade <= 120;
 }
  
- 
-/* MÁSCARA – TELEFONE  →  (00) 00000-0000*/
-document.getElementById('telefone').addEventListener('input', function () {
-    let v = this.value.replace(/\D/g, '').slice(0, 11);
-    if (v.length > 10)     v = v.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
-    else if (v.length > 6) v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-    else if (v.length > 2) v = v.replace(/(\d{2})(\d{0,5})/,        '($1) $2');
-    else if (v.length > 0) v = v.replace(/(\d{0,2})/,               '($1');
-    this.value = v;
-});
- 
- 
-/* VALIDAÇÃO DO FORMULÁRIO AO SUBMETER*/
+/* VALIDAÇÃO DO FORMULÁRIO AO SUBMETER */
 function validarForm(e) {
     e.preventDefault();
     let ok = true;
@@ -170,18 +141,8 @@ function validarForm(e) {
     // Data de nascimento
     const nascVal = document.getElementById('nascimento').value;
     if (!validarData(nascVal)) {
-        document.getElementById('erro-nascimento').textContent =
-            'Data inválida ou idade fora do permitido (16–120 anos).';
+        document.getElementById('erro-nascimento').textContent = 'Data inválida ou idade fora do permitido (16–120 anos).';
         ok = false;
-    }
- 
-    // CNPJ — só valida se o campo tiver sido preenchido (é opcional)
-    if (tipoAtual === 'empregador') {
-        const cnpjVal = document.getElementById('cnpj').value;
-        if (cnpjVal.trim() !== '' && !validarCNPJ(cnpjVal)) {
-            document.getElementById('erro-cnpj').textContent = 'CNPJ inválido. Verifique o número digitado.';
-            ok = false;
-        }
     }
  
     // Senhas
