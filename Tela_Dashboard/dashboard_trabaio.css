@@ -311,9 +311,9 @@ body { background: #efefef; font-family: 'Poppins', sans-serif; color: var(--tex
     padding: 24px 28px; box-shadow: var(--shadow);
     display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
-.boas-vindas h2 { font-size: 20px; font-weight: 800; }
+.boas-vindas h2 { font-size: 30px; font-weight: 800; }
 .boas-vindas h2 span { color: var(--green-dark); }
-.boas-vindas p { font-size: 14px; color: var(--text-soft); margin-top: 4px; }
+.boas-vindas p { font-size: 19px; color: var(--text-soft); margin-top: 4px; }
 
 .btn-editar-perfil {
     padding: 10px 20px; background: var(--green-light);
