@@ -38,10 +38,11 @@
             </div>
         </div>
             <a href="/Tela_Dashboard/dashboard_trabaio.html"><button>Início</button></a>
-
-<!--AVATAR-->
-            <div class="avatar-wrapper" onclick="toggleMenuPerfil()">
-                <img src="../img/avatar-default.png" alt="Foto de perfil" class="avatar-header" id="avatar-header-img" onerror="this.src=''; this.style.display='none'; document.getElementById('avatar-inicial').style.display='flex'">
+            
+        <div class="avatar-wrapper" onclick="toggleMenuPerfil()">
+                <img src="../img/avatar-default.png" alt="Foto de perfil" class="avatar-header"
+                     id="avatar-header-img"
+                     onerror="this.src=''; this.style.display='none'; document.getElementById('avatar-inicial').style.display='flex'">
                 <div class="avatar-inicial" id="avatar-inicial">U</div>
                 <div class="dropdown-perfil" id="dropdown-perfil">
                     <a href="perfil.html">👤 Meu Perfil</a>
@@ -52,215 +53,234 @@
             </div>
         </nav>
     </header>
-
+ <!--Mudei aq ate-->
     <div class="perfil-container">
+       <div class="perfil-card-unico">
 
-        <!-- ── SIDEBAR ── -->
-        <aside class="perfil-sidebar">
-
-            <div class="avatar-area">
-                <div class="avatar-grande" id="avatar-grande">
-                    <img src="" alt="Foto de perfil" id="avatar-preview" onerror="this.style.display='none'">
-                    <span id="avatar-letra">U</span>
-                    <label for="upload-avatar" class="btn-trocar-foto" title="Trocar foto">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                    </label>
-                    <input type="file" id="upload-avatar" accept="image/*" style="display:none">
+            <aside class="perfil-sidebar">
+                <div class="avatar-area">
+                    <div class="avatar-grande" id="avatar-grande">
+                        <img src="" alt="Foto de perfil" id="avatar-preview" onerror="this.style.display='none'">
+                        <span id="avatar-letra">U</span>
+                        <label for="upload-avatar" class="btn-trocar-foto campo-editavel" title="Trocar foto" style="display:none">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
+                                <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                                <circle cx="12" cy="13" r="4"/>
+                            </svg>
+                        </label>
+                        <input type="file" id="upload-avatar" accept="image/*" style="display:none">
+                    </div>
+                    <h2 class="perfil-nome" id="perfil-nome-exibido">Seu Nome</h2>
+                    <span class="perfil-badge">👨‍💻 Trabalhador</span>
+     
+                    <button class="btn-modo-editar" id="btn-editar" onclick="ativarEdicao()"> Editar perfil</button>
+                    <button class="btn-modo-salvar campo-editavel" id="btn-salvar-topo" onclick="salvarPerfil()" style="display:none">💾 Salvar alterações</button>
+                    <button class="btn-modo-cancelar campo-editavel" id="btn-cancelar-topo" onclick="cancelarEdicao()" style="display:none">✕ Cancelar</button>
                 </div>
-                <h2 class="perfil-nome" id="perfil-nome-exibido">Seu Nome</h2>
-                <span class="perfil-badge">👨‍💻 Trabalhador</span>
-            </div>
-
-            <div class="perfil-completude">
-                <div class="completude-header">
-                    <span>Perfil completo</span>
-                    <strong id="pct-completude">0%</strong>
+     
+                <div class="perfil-completude">
+                    <div class="completude-header">
+                        <span>Perfil completo</span>
+                        <strong id="pct-completude">0%</strong>
+                    </div>
+                    <div class="barra-completude">
+                        <div class="barra-fill" id="barra-fill"></div>
+                    </div>
+                    <p class="completude-dica" id="completude-dica">Preencha seu perfil para aparecer nas buscas.</p>
                 </div>
-                <div class="barra-completude">
-                    <div class="barra-fill" id="barra-fill"></div>
-                </div>
-                <p class="completude-dica" id="completude-dica">Preencha seu perfil para aparecer nas buscas.</p>
-            </div>
-
-            <nav class="perfil-nav">
-                <button class="perfil-nav-btn ativo" onclick="irAba('dados')">📋 Dados pessoais</button>
-                <button class="perfil-nav-btn" onclick="irAba('profissional')">💼 Perfil profissional</button>
-                <button class="perfil-nav-btn" onclick="irAba('portfolio')">🗂️ Portfólio</button>
-                <button class="perfil-nav-btn" onclick="irAba('curriculo')">📄 Currículo</button>
-            </nav>
-
-        </aside>
-
-        <!-- ── CONTEÚDO PRINCIPAL ── -->
-        <main class="perfil-main">
-
-            <!-- ABA: DADOS PESSOAIS -->
-            <section class="aba ativa" id="aba-dados">
-                <div class="aba-header">
-                    <h2>Dados pessoais</h2>
-                    <p>Essas informações aparecem no seu perfil público.</p>
-                </div>
-
-                <div class="form-grid">
-                    <div class="campo">
-                        <label>Nome completo <span class="obrigatorio">*</span></label>
-                        <input type="text" id="campo-nome" placeholder="Seu nome completo" oninput="atualizarNomeExibido(this.value)">
+     
+                <nav class="perfil-nav">
+                    <button class="perfil-nav-btn ativo" onclick="irAba('dados')">📋 Dados pessoais</button>
+                    <button class="perfil-nav-btn" onclick="irAba('profissional')">💼 Perfil profissional</button>
+                    <button class="perfil-nav-btn" onclick="irAba('portfolio')">🗂️ Portfólio</button>
+                    <button class="perfil-nav-btn" onclick="irAba('curriculo')">📄 Currículo</button>
+                </nav>
+            </aside>
+     
+            <main class="perfil-main">
+     
+                <section class="aba ativa" id="aba-dados">
+                    <div class="aba-header">
+                        <h2>Dados pessoais</h2>
+                        <p id="subtitulo-dados">Visualizando seu perfil público.</p>
                     </div>
-                    <div class="campo">
-                        <label>Título profissional <span class="obrigatorio">*</span></label>
-                        <input type="text" id="campo-titulo" placeholder="Ex: Desenvolvedor Full Stack, Designer UX...">
-                    </div>
-                    <div class="campo campo-full">
-                        <label>Sobre mim <span class="obrigatorio">*</span></label>
-                        <textarea id="campo-bio" placeholder="Conte um pouco sobre você, sua experiência e o que você busca..." rows="4" maxlength="500"></textarea>
-                        <span class="char-count"><span id="bio-count">0</span>/500</span>
-                    </div>
-                    <div class="campo">
-                        <label>Cidade</label>
-                        <input type="text" id="campo-cidade" placeholder="Ex: São Paulo, SP">
-                    </div>
-                    <div class="campo">
-                        <label>Telefone</label>
-                        <input type="text" id="campo-telefone" placeholder="(00) 00000-0000" maxlength="15" inputmode="numeric">
-                    </div>
-                    <div class="campo">
-                        <label>LinkedIn</label>
-                        <input type="url" id="campo-linkedin" placeholder="https://linkedin.com/in/seu-perfil">
-                    </div>
-                    <div class="campo">
-                        <label>Portfólio / Site</label>
-                        <input type="url" id="campo-site" placeholder="https://seusite.com">
-                    </div>
-                </div>
-
-                <div class="aba-actions">
-                    <button class="btn-salvar" onclick="salvarPerfil()">Salvar dados</button>
-                </div>
-            </section>
-
-            <!-- ABA: PERFIL PROFISSIONAL -->
-            <section class="aba" id="aba-profissional">
-                <div class="aba-header">
-                    <h2>Perfil profissional</h2>
-                    <p>Ajude os empregadores a entenderem o que você faz e quanto cobra.</p>
-                </div>
-
-                <div class="form-grid">
-                    <div class="campo">
-                        <label>Área de atuação <span class="obrigatorio">*</span></label>
-                        <select id="campo-area">
-                            <option value="" disabled selected>Selecione sua área</option>
-                            <option>Tecnologia da Informação</option>
-                            <option>Design & UX</option>
-                            <option>Marketing & Comunicação</option>
-                            <option>Construção Civil</option>
-                            <option>Saúde & Bem-estar</option>
-                            <option>Educação</option>
-                            <option>Logística & Transporte</option>
-                            <option>Gastronomia</option>
-                            <option>Administrativo & Financeiro</option>
-                            <option>Outro</option>
-                        </select>
-                    </div>
-                    <div class="campo">
-                        <label>Disponibilidade</label>
-                        <select id="campo-disponibilidade">
-                            <option value="" disabled selected>Selecione</option>
-                            <option>Integral</option>
-                            <option>Meio período</option>
-                            <option>Fins de semana</option>
-                            <option>Freelance / Projeto</option>
-                            <option>Remoto</option>
-                        </select>
-                    </div>
-                    <div class="campo">
-                        <label>Pretensão salarial</label>
-                        <input type="text" id="campo-salario" placeholder="Ex: R$ 2.000 ou A combinar">
-                    </div>
-                    <div class="campo">
-                        <label>Nível de experiência</label>
-                        <select id="campo-nivel">
-                            <option value="" disabled selected>Selecione</option>
-                            <option>Estágio / Iniciante</option>
-                            <option>Júnior (1–2 anos)</option>
-                            <option>Pleno (3–5 anos)</option>
-                            <option>Sênior (5+ anos)</option>
-                        </select>
-                    </div>
-                    <div class="campo campo-full" id="habilidade">
-                        <label>Habilidades <span class="obrigatorio">*</span></label>
-                        <div class="tags-input-wrapper">
-                            <div class="tags-lista" id="tags-lista"></div>
-                            <input type="text" id="tag-input" placeholder="Digite uma habilidade e pressione Enter" onkeydown="adicionarTag(event)">
+     
+                    <div class="form-grid">
+                        <div class="campo">
+                            <label>Nome completo</label>
+                            <p class="campo-view" id="view-nome">—</p>
+                            <input class="campo-editavel" type="text" id="campo-nome" placeholder="Seu nome completo" oninput="atualizarNomeExibido(this.value)" style="display:none">
                         </div>
-                        <span class="campo-dica">Ex: React, Photoshop, Excel, Soldagem... (máx. 15)</span>
+                        <div class="campo">
+                            <label>Título profissional</label>
+                            <p class="campo-view" id="view-titulo">—</p>
+                            <input class="campo-editavel" type="text" id="campo-titulo" placeholder="Ex: Desenvolvedor Full Stack, Designer UX..." style="display:none">
+                        </div>
+                        <div class="campo campo-full">
+                            <label>Sobre mim</label>
+                            <p class="campo-view" id="view-bio">—</p>
+                            <textarea class="campo-editavel" id="campo-bio" placeholder="Conte um pouco sobre você..." rows="4" maxlength="500" style="display:none"></textarea>
+                            <span class="char-count campo-editavel" style="display:none">
+                                <span id="bio-count">0</span>/500
+                            </span>
+                        </div>
+                        <div class="campo">
+                            <label>Cidade</label>
+                            <p class="campo-view" id="view-cidade">—</p>
+                            <input class="campo-editavel" type="text" id="campo-cidade" placeholder="Ex: São Paulo, SP" style="display:none">
+                        </div>
+                        <div class="campo">
+                            <label>Telefone</label>
+                            <p class="campo-view" id="view-telefone">—</p>
+                            <input class="campo-editavel" type="text" id="campo-telefone" placeholder="(00) 00000-0000" maxlength="15" inputmode="numeric" style="display:none">
+                        </div>
+                        <div class="campo">
+                            <label>LinkedIn</label>
+                            <p class="campo-view" id="view-linkedin">—</p>
+                            <input class="campo-editavel" type="url" id="campo-linkedin" placeholder="https://linkedin.com/in/seu-perfil" style="display:none">
+                        </div>
+                        <div class="campo">
+                            <label>Portfólio / Site</label>
+                            <p class="campo-view" id="view-site">—</p>
+                            <input class="campo-editavel" type="url" id="campo-site" placeholder="https://seusite.com" style="display:none">
+                        </div>
                     </div>
-                    <div class="campo campo-full">
-                        <label>Experiências anteriores</label>
-                        <textarea id="campo-experiencia" placeholder="Descreva brevemente seus trabalhos ou projetos anteriores..." rows="4" maxlength="800"></textarea>
+     
+                    <div class="aba-actions campo-editavel" style="display:none">
+                        <button class="btn-salvar" onclick="salvarPerfil()">Salvar dados</button>
                     </div>
-                    <div class="campo campo-full">
-                        <label>Formação acadêmica</label>
-                        <textarea id="campo-formacao" placeholder="Ex: Análise e Desenvolvimento de Sistemas – IFPI (2021–2023)" rows="3" maxlength="400"></textarea>
+                </section>
+     
+                <section class="aba" id="aba-profissional">
+                    <div class="aba-header">
+                        <h2>Perfil profissional</h2>
+                        <p id="subtitulo-profissional">Visualizando suas informações profissionais.</p>
                     </div>
-                </div>
-
-                <div class="aba-actions">
-                    <button class="btn-salvar" onclick="salvarPerfil()">Salvar perfil profissional</button>
-                </div>
-            </section>
-
-            <!-- ABA: PORTFÓLIO -->
-            <section class="aba" id="aba-portfolio">
-                <div class="aba-header">
-                    <h2>Portfólio</h2>
-                    <p>Envie arquivos em PDF com seus trabalhos. Limite de 5MB por arquivo.</p>
-                </div>
-
-                <div class="upload-area" id="upload-area-portfolio" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropArquivo(event, 'portfolio')">
-                    <div class="upload-icone">📁</div>
-                    <p><strong>Arraste seus arquivos aqui</strong> ou clique para selecionar</p>
-                    <span>Somente PDF · Máximo 5MB por arquivo</span>
-                    <label for="input-portfolio" class="btn-upload-label">Selecionar PDF</label>
-                    <input type="file" id="input-portfolio" accept=".pdf" multiple style="display:none" onchange="processarArquivos(this.files, 'portfolio')">
-                </div>
-
-                <div class="arquivos-lista" id="lista-portfolio"></div>
-
-                <div class="aba-actions">
-                    <button class="btn-salvar" onclick="salvarPerfil()">Salvar portfólio</button>
-                </div>
-            </section>
-
-            <!-- ABA: CURRÍCULO -->
-            <section class="aba" id="aba-curriculo">
-                <div class="aba-header">
-                    <h2>Currículo <span class="tag-opcional">Opcional</span></h2>
-                    <p>Envie seu currículo em PDF para que empregadores possam analisar além do portfólio.</p>
-                </div>
-
-                <div class="upload-area" id="upload-area-curriculo" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropArquivo(event, 'curriculo')">
-                    <div class="upload-icone">📄</div>
-                    <p><strong>Arraste seu currículo aqui</strong> ou clique para selecionar</p>
-                    <span>Somente PDF · Máximo 5MB</span>
-                    <label for="input-curriculo" class="btn-upload-label">Selecionar PDF</label>
-                    <input type="file" id="input-curriculo" accept=".pdf" style="display:none" onchange="processarArquivos(this.files, 'curriculo')">
-                </div>
-
-                <div class="arquivos-lista" id="lista-curriculo"></div>
-
-                <div class="curriculo-dica">
-                    <span>💡</span>
-                    <p>Seu currículo fica visível apenas para empregadores que você aprovar ou que te enviarem uma proposta.</p>
-                </div>
-
-                <div class="aba-actions">
-                    <button class="btn-salvar" onclick="salvarPerfil()">Salvar currículo</button>
-                </div>
-            </section>
-
-        </main>
-    </div>
+     
+                    <div class="form-grid">
+                        <div class="campo">
+                            <label>Área de atuação</label>
+                            <p class="campo-view" id="view-area">—</p>
+                            <select class="campo-editavel" id="campo-area" style="display:none">
+                                <option value="" disabled selected>Selecione sua área</option>
+                                <option>Tecnologia da Informação</option>
+                                <option>Design & UX</option>
+                                <option>Marketing & Comunicação</option>
+                                <option>Construção Civil</option>
+                                <option>Saúde & Bem-estar</option>
+                                <option>Educação</option>
+                                <option>Logística & Transporte</option>
+                                <option>Gastronomia</option>
+                                <option>Administrativo & Financeiro</option>
+                                <option>Outro</option>
+                            </select>
+                        </div>
+                        <div class="campo">
+                            <label>Disponibilidade</label>
+                            <p class="campo-view" id="view-disponibilidade">—</p>
+                            <select class="campo-editavel" id="campo-disponibilidade" style="display:none">
+                                <option value="" disabled selected>Selecione</option>
+                                <option>Integral</option>
+                                <option>Meio período</option>
+                                <option>Fins de semana</option>
+                                <option>Freelance / Projeto</option>
+                                <option>Remoto</option>
+                            </select>
+                        </div>
+                        <div class="campo">
+                            <label>Pretensão salarial</label>
+                            <p class="campo-view" id="view-salario">—</p>
+                            <input class="campo-editavel" type="text" id="campo-salario" placeholder="Ex: R$ 2.000 ou A combinar" style="display:none">
+                        </div>
+                        <div class="campo">
+                            <label>Nível de experiência</label>
+                            <p class="campo-view" id="view-nivel">—</p>
+                            <select class="campo-editavel" id="campo-nivel" style="display:none">
+                                <option value="" disabled selected>Selecione</option>
+                                <option>Estágio / Iniciante</option>
+                                <option>Júnior (1–2 anos)</option>
+                                <option>Pleno (3–5 anos)</option>
+                                <option>Sênior (5+ anos)</option>
+                            </select>
+                        </div>
+                        <div class="campo campo-full" id="habilidade">
+                            <label>Habilidades</label>
+                            <div class="campo-view tags-view" id="view-habilidades">—</div>
+                            <div class="campo-editavel tags-input-wrapper" style="display:none">
+                                <div class="tags-lista" id="tags-lista"></div>
+                                <input type="text" id="tag-input" placeholder="Digite uma habilidade e pressione Enter" onkeydown="adicionarTag(event)">
+                            </div>
+                            <span class="campo-dica campo-editavel" style="display:none">
+                                Ex: React, Photoshop, Excel, Soldagem... (máx. 15)
+                            </span>
+                        </div>
+                        <div class="campo campo-full">
+                            <label>Experiências anteriores</label>
+                            <p class="campo-view" id="view-experiencia">—</p>
+                            <textarea class="campo-editavel" id="campo-experiencia" placeholder="Descreva brevemente seus trabalhos..." rows="4" maxlength="800" style="display:none"></textarea>
+                        </div>
+                        <div class="campo campo-full">
+                            <label>Formação acadêmica</label>
+                            <p class="campo-view" id="view-formacao">—</p>
+                            <textarea class="campo-editavel" id="campo-formacao" placeholder="Ex: Análise e Desenvolvimento de Sistemas – IFPI (2021–2023)" rows="3" maxlength="400" style="display:none"></textarea>
+                        </div>
+                    </div>
+     
+                    <div class="aba-actions campo-editavel" style="display:none">
+                        <button class="btn-salvar" onclick="salvarPerfil()">Salvar perfil profissional</button>
+                    </div>
+                </section>
+     
+                <section class="aba" id="aba-portfolio">
+                    <div class="aba-header">
+                        <h2>Portfólio</h2>
+                        <p>Arquivos PDF com seus trabalhos. Limite de 5MB por arquivo.</p>
+                    </div>
+     
+                    <div id="portfolio-view" class="arquivos-lista"></div>
+                    <p id="portfolio-view-vazio" class="campo-view-vazio">Nenhum arquivo enviado ainda.</p>
+     
+                    <div class="campo-editavel" style="display:none">
+                        <div class="upload-area" id="upload-area-portfolio" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropArquivo(event, 'portfolio')">
+                            <div class="upload-icone">📁</div>
+                            <p><strong>Arraste seus arquivos aqui</strong> ou clique para selecionar</p>
+                            <span>Somente PDF · Máximo 5MB por arquivo</span>
+                            <label for="input-portfolio" class="btn-upload-label">Selecionar PDF</label>
+                            <input type="file" id="input-portfolio" accept=".pdf" multiple style="display:none" onchange="processarArquivos(this.files, 'portfolio')">
+                        </div>
+                        <div class="arquivos-lista" id="lista-portfolio"></div>
+                    </div>
+     
+                    <div class="aba-actions campo-editavel" style="display:none">
+                        <button class="btn-salvar" onclick="salvarPerfil()">Salvar portfólio</button>
+                    </div>
+                </section>
+     
+                <section class="aba" id="aba-curriculo">
+                    <div class="aba-header">
+                        <h2>Currículo <span class="tag-opcional">Opcional</span></h2>
+                        <p>Envie seu currículo em PDF para que empregadores possam analisar antes de entrar em contato.</p>
+                    </div>
+     
+                    <div id="curriculo-view" class="arquivos-lista"></div>
+                    <p id="curriculo-view-vazio" class="campo-view-vazio">Nenhum currículo enviado ainda.</p>
+     
+                    <div class="campo-editavel" style="display:none">
+                        <div class="upload-area" id="upload-area-curriculo" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropArquivo(event, 'curriculo')">
+                            <div class="upload-icone">📄</div>
+                            <p><strong>Arraste seu currículo aqui</strong> ou clique para selecionar</p>
+                            <span>Somente PDF · Máximo 5MB</span>
+                            <label for="input-curriculo" class="btn-upload-label">Selecionar PDF</label>
+                            <input type="file" id="input-curriculo" accept=".pdf" style="display:none" onchange="processarArquivos(this.files, 'curriculo')">
+                        </div>
+                        <div class="arquivos-lista" id="lista-curriculo"></div>
+                    </div>
+     
+                    <div class="aba-actions campo-editavel" style="display:none">
+                        <button class="btn-salvar" onclick="salvarPerfil()">Salvar currículo</button>
+                    </div>
+                </section>
+            </main> <!--ATE AQUI-->
 
     <script src="perfil.js"></script>
 </body>
