@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkNOW</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="./img/logo.png">
+</head>
+<body>
+    <header id="#index.html">
+        <h1> <span class="logo-work">Work</span><span class="logo-now">NOW</span></h1>
+        <nav>
+            <a href="#conta"><button>Entrar</button></a>
+            <a href="cadastro/login.html"><button>Registrar</button></a>
+        </nav>
+    </header>
+    <!--img de fundo-->
+    <section class="trabai">
+        <div class="sla-overlay">
+            <h2>
+            SEU PROXIMO TRABALHO <br>
+            <span>COMEÇA AQUI</span>
+            </h2>
+        </div>
+    </section>
+  
+    <main>
+
+        <section class="left-side">
+            <p>
+                Transforme seu conhecimento em oportunidades e construa uma carreira sem
+                <span>LIMITES.</span>
+            </p>
+        </section>
+<!--LOGINNNNNNNN-->
+        <section class="right-side">
+
+            <h3 id="conta">Seja Bem Vindo</h3>
+            <h1 >ACESSE SUA CONTA</h1>
+
+            <form action="loginDB.php" method="POST">
+
+                <input type="email" name="email_user" id="email" placeholder="Digite seu Gmail" required >
+
+                <input type="password" name="senha_user" id="senha" placeholder="Senha" required>
+
+                <input type="submit" id="Entrar" value="Entrar">
+
+                <div class="register">
+                    <span>Primeira vez?</span>
+                    <a href="cadastro/login.html">Crie sua conta!</a>
+                </div>
+
+            </form>
+
+        </section>
+
+    
+    
+    </main>
+<!-- STATS -->
+    <section class="stats">
+        <div class="stat">
+            <span class="stat-number" data-target="1500">0</span>
+            <span class="stat-label">Usuários registrados</span>
+        </div>
+ 
+        <div class="stat-divider"></div>
+ 
+        <div class="stat">
+            <span class="stat-number" data-target="2000">0</span>
+            <span class="stat-label">Total de empregos publicados</span>
+        </div>
+ 
+        <div class="stat-divider"></div>
+<!--FOTEERRRRRR-->
+    <footer>
+        <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="f-logo">Work<span>NOW</span></div>
+        <p data-i18n="footer.desc">Conectando talentos e oportunidades em todo o Brasil. Seu próximo passo começa aqui.</p>
+      </div>
+ 
+      <div class="footer-col">
+        <h4 data-i18n="footer.col1.title">Plataforma</h4>
+        <ul>
+          <li><a href="#" data-i18n="footer.col1.l1">Como funciona</a></li>
+          <li><a href="#" data-i18n="footer.col1.l2">Para Contratar</a></li>
+          <li><a href="#" data-i18n="footer.col1.l3">Para Trabalhar</a></li>
+        </ul>
+      </div>
+ 
+      <div class="footer-col">
+        <h4 data-i18n="footer.col2.title">Empresa</h4>
+        <ul>
+          <li><a href="#" data-i18n="footer.col2.l1">Sobre nós</a></li>
+          <li><a href="#" data-i18n="footer.col2.l4">Contato</a></li>
+        </ul>
+      </div>
+ 
+      <div class="footer-col">
+        <h4 data-i18n="footer.col3.title">Legal</h4>
+        <ul>
+          <li><a href="#" data-i18n="footer.col3.l1">Privacidade</a></li>
+          <li><a href="#" data-i18n="footer.col3.l2">Termos de uso</a></li>
+          <li><a href="#" data-i18n="footer.col3.l3">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+ 
+    <div class="footer-bottom">
+      <span data-i18n="footer.copy">© 2026 WorkNOW. Todos os direitos reservados.</span>
+    </div>
+  </div>
+    </footer>
+
+    <script src="work.js"></script>
+</body>
+</html>
