@@ -295,7 +295,7 @@ header .avatar-wrapper { position: relative; cursor: pointer; }
     padding: 36px; box-shadow: var(--shadow);
     animation: fadeIn 0.25s ease;
 }
-.aba.ativa { display: block; }
+.aba.ativa { display: block;}
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(8px); }

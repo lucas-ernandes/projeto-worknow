@@ -30,6 +30,9 @@ function ativarEdicao() {
     document.getElementById('curriculo-view').style.display = 'none';
  
     atualizarSubtitulos(true);
+    // registrar projeto  
+    renderProjetosEdit(); // (14/06)
+
 }
  
 function cancelarEdicao() {
@@ -60,6 +63,7 @@ function voltarModoView() {
     atualizarSubtitulos(false);
     atualizarViews();
     calcularCompletude();
+    renderProjetosView(); // (14/06)
 }
  
 function atualizarSubtitulos(editando) {
@@ -69,6 +73,12 @@ function atualizarSubtitulos(editando) {
     document.getElementById('subtitulo-profissional').textContent = editando
         ? 'Edite suas informações profissionais.'
         : 'Visualizando suas informações profissionais.';
+
+    // registrar projetos
+    const sp = document.getElementById('subtitulo-projetos'); // (14/06)
+     if (sp) sp.textContent = editando// (14/06)
+       ? 'Adicione e edite seus projetos concluídos.' // (14/06)
+       : 'Compartilhe os trabalhos que você realizou.';  // (14/06)
 }
  
 /* Atualiza os textos de visualização com base nos inputs */
