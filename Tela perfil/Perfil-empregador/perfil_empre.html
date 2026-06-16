@@ -334,7 +334,7 @@
                         <span class="char-count"><span id="desc-count">0</span>/1500</span>
                     </div>
                     <div class="campo campo-full">
-                        <label>Habilidades desejadas</label>
+                        <label>Habilidades desejadas<span class="obrigatorio">*</span></label>
                         <div class="tags-input-wrapper">
                             <div class="tags-lista" id="tags-vaga-lista"></div>
                             <input type="text" id="tag-vaga-input"
@@ -347,7 +347,7 @@
                         <label>💰 Orçamento proposto <span class="obrigatorio">*</span>
                             <span class="campo-dica-inline">Obrigatório para publicar</span>
                         </label>
-                        <input type="text" id="vaga-orcamento" placeholder="Ex: R$ 3.000/mês, R$ 500 por projeto, A combinar">
+                        <input type="number" id="vaga-orcamento" min="0.01" steq="0.01" placeholder="Ex: R$ 3.000/mês, R$ 500 por projeto, A combinar">
                         <span class="campo-erro" id="erro-orcamento"></span>
                     </div>
                     <div class="campo destaque-campo">

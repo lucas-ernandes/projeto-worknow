@@ -249,32 +249,78 @@ document.querySelector('.tags-input-wrapper').addEventListener('click', () => {
 const vagas = [];
 
 function publicarVaga() {
+    // Limpa mensagens de erro anteriores
     document.getElementById('erro-orcamento').textContent = '';
-    document.getElementById('erro-prazo').textContent = '';
+    if (document.getElementById('erro-prazo')) document.getElementById('erro-prazo').textContent = '';
 
-    const titulo    = document.getElementById('vaga-titulo').value.trim();
-    const area      = document.getElementById('vaga-area').value;
-    const tipo      = document.getElementById('vaga-tipo').value;
-    const descricao = document.getElementById('vaga-descricao').value.trim();
-    const orcamento = document.getElementById('vaga-orcamento').value.trim();
-    const prazo     = document.getElementById('vaga-prazo').value.trim();
-    const modalidade= document.getElementById('vaga-modalidade').value;
-    const nivel     = document.getElementById('vaga-nivel').value;
-    const local     = document.getElementById('vaga-local').value.trim();
-    const qtd       = document.getElementById('vaga-quantidade').value;
-    const beneficios= document.getElementById('vaga-beneficios').value.trim();
+    // Captura dos valores
+    const titulo     = document.getElementById('vaga-titulo').value.trim();
+    const area       = document.getElementById('vaga-area').value;
+    const tipo       = document.getElementById('vaga-tipo').value;
+    const descricao  = document.getElementById('vaga-descricao').value.trim();
+    const orcamentoRaw = document.getElementById('vaga-orcamento').value.trim();
+    const prazo      = document.getElementById('vaga-prazo').value.trim();
+    const modalidade = document.getElementById('vaga-modalidade').value;
+    const nivel      = document.getElementById('vaga-nivel').value;
+    const local      = document.getElementById('vaga-local').value.trim();
+    const qtd        = document.getElementById('vaga-quantidade').value;
+    const beneficios = document.getElementById('vaga-beneficios').value.trim();
 
-    let bloqueado = false;
-    if (!orcamento) { document.getElementById('erro-orcamento').textContent = 'O orçamento proposto é obrigatório para publicar a vaga.'; bloqueado = true; }
-    if (!prazo)     { document.getElementById('erro-prazo').textContent = 'O prazo esperado é obrigatório para publicar a vaga.'; bloqueado = true; }
-    if (!titulo || !area || !tipo || !descricao) { mostrarToast('⚠ Preencha todos os campos obrigatórios.'); return; }
-    if (bloqueado) return;
+    // Validações
+    let temErro = false;
 
+    if (!titulo || !descricao) {
+        mostrarToast('⚠ Título e Descrição são campos obrigatórios.');
+        return; 
+    }
+
+    const valorOrcamento = parseFloat(orcamentoRaw);
+    if (!orcamentoRaw) {
+        document.getElementById('erro-orcamento').textContent = 'O orçamento proposto é obrigatório.';
+        temErro = true;
+    } else if (isNaN(valorOrcamento) || valorOrcamento <= 0) {
+        document.getElementById('erro-orcamento').textContent = 'O orçamento deve ser um valor maior que zero.';
+        temErro = true;
+    }
+
+    if (tagsVaga.length === 0) {
+        mostrarToast('⚠ Adicione pelo menos uma competência exigida.');
+        temErro = true;
+    }
+
+    if (temErro) return;
+
+    // Formatação de moeda
+    const orcamentoFormatado = valorOrcamento.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    });
+
+    const agora = new Date();
+    const dataHoraPublicacao = agora.toLocaleDateString('pt-BR') + ' às ' + 
+                               agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+    const idEmpregadorLogado = 42; 
+
+    // Salvando a vaga
     vagas.push({
-        id: Date.now(), titulo, area, tipo, descricao, orcamento, prazo,
-        modalidade, nivel, local, qtd: qtd || '1', beneficios,
-        habilidades: [...tagsVaga], status: 'ativa',
-        data: new Date().toLocaleDateString('pt-BR'), candidatos: 0,
+        id: Date.now(),
+        empregadorId: idEmpregadorLogado,
+        titulo,
+        area,
+        tipo,
+        descricao,
+        orcamento: orcamentoFormatado,
+        prazo,
+        modalidade,
+        nivel,
+        local,
+        qtd: qtd || '1',
+        beneficios,
+        habilidades: [...tagsVaga],
+        status: 'Aberta',
+        data: dataHoraPublicacao,
+        candidatos: 0,
     });
 
     renderVagas();
@@ -284,82 +330,11 @@ function publicarVaga() {
     mostrarToast('🚀 Vaga publicada com sucesso!');
 }
 
-function salvarRascunho() {
-    const titulo = document.getElementById('vaga-titulo').value.trim();
-    if (!titulo) { mostrarToast('⚠ Adicione pelo menos um título para salvar o rascunho.'); return; }
-    mostrarToast('💾 Rascunho salvo!');
-}
-
-function encerrarVaga(id) {
-    const vaga = vagas.find(v => v.id === id);
-    if (!vaga) return;
-    vaga.status = vaga.status === 'ativa' ? 'encerrada' : 'ativa';
-    renderVagas();
-    mostrarToast(vaga.status === 'ativa' ? '✓ Vaga reativada!' : '✓ Vaga encerrada.');
-}
-
-function excluirVaga(id) {
-    const idx = vagas.findIndex(v => v.id === id);
-    if (idx === -1) return;
-    vagas.splice(idx, 1);
-    renderVagas();
-    atualizarStatVagas();
-    mostrarToast('🗑 Vaga removida.');
-}
-
-function renderVagas(lista = vagas) {
-    const container = document.getElementById('lista-vagas');
-    if (!lista.length) {
-        container.innerHTML = `<div class="vagas-empty"><span>📭</span><p>Você ainda não publicou nenhuma vaga.</p><button onclick="irAba('publicar')">Publicar primeira vaga</button></div>`;
-        return;
-    }
-    container.innerHTML = lista.map(v => `
-        <div class="vaga-card ${v.status === 'encerrada' ? 'encerrada' : ''}">
-            <div class="vaga-card-top">
-                <div>
-                    <h3>${v.titulo}</h3>
-                    <div class="vaga-card-tags">
-                        <span class="vaga-tag">${v.area}</span>
-                        <span class="vaga-tag">${v.tipo}</span>
-                        ${v.modalidade ? `<span class="vaga-tag">${v.modalidade}</span>` : ''}
-                        <span class="vaga-tag vaga-tag-status ${v.status}">${v.status === 'ativa' ? '🟢 Ativa' : '🔴 Encerrada'}</span>
-                    </div>
-                </div>
-                <div class="vaga-card-meta">
-                    <span>💰 ${v.orcamento}</span>
-                    <span>📅 ${v.prazo}</span>
-                    <span>Publicada em ${v.data}</span>
-                    <span>👥 ${v.candidatos} candidato(s)</span>
-                </div>
-            </div>
-            <p class="vaga-card-desc">${v.descricao.length > 160 ? v.descricao.slice(0, 160) + '...' : v.descricao}</p>
-            <div class="vaga-card-actions">
-                <button class="btn-vaga-acao" onclick="encerrarVaga(${v.id})">${v.status === 'ativa' ? '⏹ Encerrar' : '▶ Reativar'}</button>
-                <button class="btn-vaga-acao danger" onclick="excluirVaga(${v.id})">🗑 Excluir</button>
-            </div>
-        </div>`).join('');
-}
-
-function filtrarVagas(termo) {
-    const filtradas = vagas.filter(v =>
-        v.titulo.toLowerCase().includes(termo.toLowerCase()) ||
-        v.area.toLowerCase().includes(termo.toLowerCase()));
-    renderVagas(filtradas);
-}
-
 function atualizarStatVagas() {
-    document.getElementById('stat-vagas').textContent = vagas.length;
-    document.getElementById('stat-candidatos').textContent = vagas.reduce((acc, v) => acc + v.candidatos, 0);
-}
-
-function limparFormVaga() {
-    ['vaga-titulo','vaga-descricao','vaga-orcamento','vaga-prazo','vaga-local','vaga-quantidade','vaga-beneficios']
-        .forEach(id => document.getElementById(id).value = '');
-    ['vaga-area','vaga-tipo','vaga-modalidade','vaga-nivel']
-        .forEach(id => document.getElementById(id).selectedIndex = 0);
-    tagsVaga.length = 0;
-    renderTagsVaga();
-    document.getElementById('desc-count').textContent = '0';
+    const stat = document.getElementById('stat-vagas');
+    if (stat) {
+        stat.textContent = vagas.length;
+    }
 }
 
 
@@ -438,3 +413,83 @@ window.addEventListener('DOMContentLoaded', () => {
     atualizarBadge();
     renderVagas();
 });
+
+
+/* ═══════════════════════════════════════════
+   RENDERIZAR VAGAS
+═══════════════════════════════════════════ */
+function renderVagas() {
+    const lista = document.getElementById('lista-vagas');
+    if (!lista) return;
+
+    if (vagas.length === 0) {
+        lista.innerHTML = `
+            <div class="vagas-empty">
+                <span>📭</span>
+                <p>Você ainda não publicou nenhuma vaga.</p>
+                <button onclick="irAba('publicar')">Publicar primeira vaga</button>
+            </div>`;
+        return;
+    }
+
+    lista.innerHTML = vagas.map(v => `
+        <div class="vaga-card">
+            <div class="vaga-card-header">
+                <h3>${v.titulo}</h3>
+                <span class="vaga-status status-aberta">${v.status}</span>
+            </div>
+            <p class="vaga-area"><strong>Área:</strong> ${v.area} | <strong>Tipo:</strong> ${v.tipo}</p>
+            <p class="vaga-desc">${v.descricao}</p>
+            
+            <div class="vaga-tags">
+                ${v.habilidades.map(h => `<span class="vaga-tag-item">${h}</span>`).join('')}
+            </div>
+            
+            <div class="vaga-card-footer">
+                <span>💰 ${v.orcamento}</span>
+                <span>📅 ${v.prazo}</span>
+            </div>
+            <small class="vaga-data">Publicada em ${v.data}</small>
+        </div>
+    `).join('');
+}
+
+
+/* ═══════════════════════════════════════════
+   AUXILIARES (LIMPAR E FILTRAR)
+═══════════════════════════════════════════ */
+function limparFormVaga() {
+    document.getElementById('vaga-titulo').value = '';
+    document.getElementById('vaga-descricao').value = '';
+    document.getElementById('vaga-orcamento').value = '';
+    document.getElementById('vaga-prazo').value = '';
+    document.getElementById('vaga-local').value = '';
+    document.getElementById('vaga-quantidade').value = '';
+    document.getElementById('vaga-beneficios').value = '';
+
+    document.getElementById('vaga-area').selectedIndex = 0;
+    document.getElementById('vaga-tipo').selectedIndex = 0;
+    document.getElementById('vaga-modalidade').selectedIndex = 0;
+    document.getElementById('vaga-nivel').selectedIndex = 0;
+
+    tagsVaga.length = 0; 
+    renderTagsVaga(); 
+    
+    const descCount = document.getElementById('desc-count');
+    if (descCount) descCount.textContent = '0';
+}
+
+function filtrarVagas(valor) {
+    const termo = valor.toLowerCase().trim();
+    const cards = document.querySelectorAll('.vaga-card');
+    
+    vagas.forEach((vaga, index) => {
+        const card = cards[index];
+        if (!card) return;
+        
+        const corresponde = vaga.titulo.toLowerCase().includes(termo) || 
+                            vaga.descricao.toLowerCase().includes(termo);
+                            
+        card.style.display = corresponde ? '' : 'none';
+    });
+}
