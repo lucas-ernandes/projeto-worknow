@@ -192,17 +192,30 @@ header .avatar-wrapper { position: relative; cursor: pointer; }
 
 /* ── LAYOUT ── */
 .perfil-container {
-    max-width: 1100px; margin: 130px auto 60px;
-    padding: 0 24px;
-    display: grid; grid-template-columns: 280px 1fr;
-    gap: 28px; align-items: start;
+    max-width: 1100px; 
+    margin: 130px auto 60px;
+    padding: 0; /* Zerado para colar as bordas */
+    display: grid; 
+    grid-template-columns: 280px 1fr;
+    gap: 0; /* Remove o vão cinza que separava os dois blocos */
+    align-items: stretch; /* Força a sidebar e o conteúdo a terem sempre a mesma altura */
+    background: #fff;
+    border-radius: 20px; /* Bordas arredondadas elegantes no card completo */
+    box-shadow: var(--shadow);
+    overflow: hidden; /* Garante que os filhos respeitem o arredondamento do pai */
 }
 
 /* ── SIDEBAR ── */
 .perfil-sidebar {
-    background: #fff; border-radius: 6px;
-    padding: 32px 24px; box-shadow: var(--shadow);
-    position: sticky; top: 120px;
+    background: #fff; 
+    border-radius: 0; /* Remove o arredondamento individual antigo */
+    border-right: 1px solid var(--gray-mid); /* Divisória minimalista entre os lados */
+    padding: 32px 24px; 
+    box-shadow: none; /* Sombra agora pertence ao container pai */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 .avatar-area {
@@ -288,12 +301,23 @@ header .avatar-wrapper { position: relative; cursor: pointer; }
 .sidebar-stat-divider { width: 1px; height: 36px; background: var(--gray-mid); }
 
 /* ── MAIN ── */
-.perfil-main { display: flex; flex-direction: column; }
-
+.perfil-main {     display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: #fff;
+    width: 100%;
+    margin-top: 0;
+    padding-top: 10px;}
+/*-- ABAS DE CONTEUDO  --*/
 .aba {
-    display: none; background: #fff; border-radius: 6px;
-    padding: 36px; box-shadow: var(--shadow);
+    display: none; 
+    background: #fff; 
+    border-radius: 0; /* Remove as bordas individuais antigas */
+    padding: 40px; /* Espaço interno generoso para respirar os campos */
+    box-shadow: none; /* Sombra removida para não encavalar com o card pai */
     animation: fadeIn 0.25s ease;
+    width: 100%;
+    box-sizing: border-box;
 }
 .aba.ativa { display: block;}
 
@@ -505,18 +529,98 @@ header .avatar-wrapper { position: relative; cursor: pointer; }
 }
 .toast.visivel { opacity: 1; transform: translateY(0); }
 .toast-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+ 
+/* Texto de visualização */
+.campo-view {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    padding: 14px 18px;
+    background: #f7f7f7;
+    border-radius: 12px;
+    border: 1.5px solid transparent;
+    min-height: 50px;
+    line-height: 1.5;
+}
+ 
+/* Botões de modo na sidebar */
+.btn-modo-editar {
+    width: 100%;
+    padding: 11px 0;
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(46,204,64,.3);
+    transition: background 0.2s, transform 0.15s;
+    margin-top: 10px;
+}
+.btn-modo-editar:hover { background: var(--green-dark); transform: translateY(-1px); }
+ 
+.btn-modo-salvar {
+    width: 100%;
+    padding: 11px 0;
+    background: linear-gradient(90deg, var(--green-dark), var(--green));
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 3px 10px rgba(46,204,64,.3);
+    transition: transform 0.15s;
+}
+.btn-modo-salvar:hover { transform: translateY(-1px); }
+ 
+.btn-modo-cancelar {
+    width: 100%;
+    padding: 9px 0;
+    background: none;
+    color: var(--text-soft);
+    border: 1.5px solid var(--gray-mid);
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: background 0.15s, border-color 0.15s;
+}
+.btn-modo-cancelar:hover { background: #fef2f2; border-color: #fca5a5; color: #e53e3e; }
 
 /* ── RESPONSIVO ── */
 @media (max-width: 900px) {
-    .perfil-container { grid-template-columns: 1fr; margin-top: 110px; }
-    .perfil-sidebar { position: static; }
-    .perfil-nav { flex-direction: row; flex-wrap: wrap; }
-    .perfil-nav-btn { flex: 1; min-width: 130px; text-align: center; }
+    .perfil-container { 
+        grid-template-columns: 1fr; /* Quebra em coluna única no tablet/celular */
+        margin: 110px 16px 40px; 
+        width: auto;
+    }
+    
+    .perfil-sidebar { 
+        border-right: none; 
+        border-bottom: 1px solid var(--gray-mid); /* Troca a linha divisória para a horizontal */
+    }
+    
+    .perfil-nav { 
+        flex-direction: row; 
+        flex-wrap: wrap; 
+    }
+    
+    .perfil-nav-btn { 
+        flex: 1; 
+        min-width: 130px; 
+        text-align: center; 
+    }
 }
 
 @media (max-width: 600px) {
-    .perfil-container { padding: 0 14px; }
-    .aba { padding: 24px 18px; }
+    .aba { padding: 28px 18px; }
     .form-grid { grid-template-columns: 1fr; }
     .campo-full { grid-column: 1; }
     .vaga-card-top { flex-direction: column; }
