@@ -102,6 +102,7 @@ const candidaturas = [];
 let filtroRapidoAtivo = '';
 let vagasFavoritas = new Set();
 let viewAtual = 'painel';
+let abaAtiva = 'candidaturas';
 
 
 /* ═══════════════════════════════════════════
@@ -115,14 +116,66 @@ function irView(view, linkEl) {
     document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('ativo'));
     if (linkEl) linkEl.classList.add('ativo');
 
+    // Esconde todas as telas primeiro
+    document.getElementById('view-painel').style.display = 'none';
+    document.getElementById('view-candidaturas').style.display = 'none';
+    document.getElementById('view-suporte').style.display = 'none';
+
+    // Mostra apenas a tela desejada
     if (view === 'painel') {
         document.getElementById('view-painel').style.display = 'flex';
-        document.getElementById('view-candidaturas').style.display = 'none';
-    } else {
-        document.getElementById('view-painel').style.display = 'none';
+    } else if (view === 'candidaturas') {
         document.getElementById('view-candidaturas').style.display = 'flex';
         renderCandidaturas();
+    } else if (view === 'suporte') {
+        document.getElementById('view-suporte').style.display = 'flex';
     }
+}
+
+/* ═══════════════════════════════════════════
+   ENVIO DO SUPORTE
+═══════════════════════════════════════════ */
+function enviarSuporte(event) {
+    event.preventDefault(); // Evita que a página recarregue
+
+    const assunto = document.getElementById('suporte-assunto').value;
+    const mensagem = document.getElementById('suporte-mensagem').value;
+
+    // Backend futuro: Aqui você faria um fetch(POST) enviando o assunto e a mensagem.
+    console.log('Ticket de Suporte Criado:', { assunto, mensagem });
+
+    // Limpa o formulário após o envio
+    document.getElementById('form-suporte').reset();
+
+    // Mostra o feedback visual usando o seu sistema de toast
+    mostrarToast('🚀 Mensagem enviada! Retornaremos em breve.');
+}
+
+/* ═══════════════════════════════════════════
+   ABAS SECUNDÁRIAS dentro de Minhas Candidaturas
+═══════════════════════════════════════════ */
+function irAbaSecundaria(aba) {
+    abaAtiva = aba;
+
+    // 1. Remove a classe 'ativo' de TODAS as abas secundárias
+    document.querySelectorAll('#view-candidaturas .tag-filtro').forEach(t => {
+        t.classList.remove('ativo');
+    });
+    
+    // 2. Adiciona a classe 'ativo' apenas na aba que foi clicada
+    if (aba === 'candidaturas') {
+        document.getElementById('tab-candidaturas')?.classList.add('ativo');
+    } else if (aba === 'favoritos') {
+        document.getElementById('tab-favoritos')?.classList.add('ativo');
+    }
+
+    // 3. Mostra/oculta os painéis de conteúdo corretamente
+    document.getElementById('painel-candidaturas').style.display = aba === 'candidaturas' ? 'block' : 'none';
+    document.getElementById('painel-favoritos').style.display    = aba === 'favoritos'    ? 'block' : 'none';
+
+    // 4. Renderiza os dados atualizados da aba escolhida
+    if (aba === 'candidaturas') renderCandidaturas();
+    if (aba === 'favoritos')    renderFavoritos();
 }
 
 
@@ -377,19 +430,98 @@ function limparFiltros() {
    POST /favoritos → salvar
    DELETE /favoritos/{id} → remover
 ═══════════════════════════════════════════ */
+// Cenário 1 e 2: favoritar / desfavoritar
 function toggleFavorito(id, btn) {
     if (vagasFavoritas.has(id)) {
+        // Cenário 2: desfavoritar
         vagasFavoritas.delete(id);
         btn.textContent = '🤍';
         btn.classList.remove('favoritado');
+        // se estiver na tela de favoritos, atualiza ao vivo
+        if (abaAtiva === 'favoritos' && viewAtual === 'candidaturas') renderFavoritos();
     } else {
+        // Cenário 1: favoritar
         vagasFavoritas.add(id);
         btn.textContent = '❤️';
         btn.classList.add('favoritado');
         mostrarToast('❤️ Vaga salva nos favoritos!');
     }
+    atualizarBadgeCandidaturas();
 }
 
+// Cenário 3 e 5: exibir favoritos
+function renderFavoritos() {
+    const container = document.getElementById('lista-favoritos');
+    const vazio     = document.getElementById('favoritos-vazio');
+    if (!container) return;
+
+    const listaFav = vagasDB.filter(v => vagasFavoritas.has(v.id));
+
+    if (!listaFav.length) {
+        // Cenário 5: lista vazia
+        container.innerHTML = '';
+        vazio.style.display = 'flex';
+        return;
+    }
+
+    vazio.style.display = 'none';
+    const jaCandidatou = id => candidaturas.some(c => c.vagaId === id);
+
+    // Cenário 3: lista de vagas favoritadas
+    container.innerHTML = listaFav.map(v => `
+        <div class="cand-card fav-card">
+            <div class="cand-card-top">
+                <div class="vaga-empresa-logo" style="background:${v.corEmpresa}">${v.inicialEmpresa}</div>
+                <div class="cand-info">
+                    <h3>${v.titulo}</h3>
+                    <span>${v.empresa} · ${v.local}</span>
+                </div>
+                <!-- botão de remover dos favoritos direto da lista -->
+                <button class="btn-fav-remover" onclick="removerFavoritoDaLista(${v.id})" title="Remover dos favoritos">❤️</button>
+            </div>
+
+            <div class="vaga-tags" style="margin-top:10px">
+                <span class="vaga-tag">${v.tipo}</span>
+                <span class="vaga-tag">${v.modalidade}</span>
+                <span class="vaga-tag">${v.nivel}</span>
+            </div>
+
+            <p class="vaga-desc">${v.descricao}</p>
+
+            <div class="vaga-card-footer" style="margin-top:12px; padding-top:12px; border-top:1px solid #eee; display:flex; justify-content:space-between; align-items:center">
+                <div>
+                    <span class="vaga-orcamento">💰 ${v.orcamento}</span><br>
+                    <span class="vaga-prazo" style="font-size:12px; color:#888">📅 ${v.prazo}</span>
+                </div>
+                <!-- Cenário 4: candidatar a partir dos favoritos -->
+                <button
+                    class="btn-candidatar ${jaCandidatou(v.id) ? 'candidatado' : ''}"
+                    data-vaga-id="${v.id}"
+                    onclick="candidatar(${v.id}, this)"
+                    ${jaCandidatou(v.id) ? 'disabled' : ''}
+                    style="font-size:13px; padding:10px 18px">
+                    ${jaCandidatou(v.id) ? '✓ Candidatura enviada!' : 'Candidatar-se'}
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Remove dos favoritos direto da lista de favoritos
+function removerFavoritoDaLista(id) {
+    vagasFavoritas.delete(id);
+
+    // sincroniza o coração no painel de vagas se estiver renderizado
+    const btnPainel = document.querySelector(`.btn-favorito[data-fav-id="${id}"]`);
+    if (btnPainel) {
+        btnPainel.textContent = '🤍';
+        btnPainel.classList.remove('favoritado');
+    }
+
+    atualizarBadgeCandidaturas();
+    renderFavoritos();
+    mostrarToast('Vaga removida dos favoritos.');
+}
 
 /* ═══════════════════════════════════════════
    CANDIDATAR-SE
@@ -523,18 +655,18 @@ document.addEventListener('click', (e) => {
    TOAST
 ═══════════════════════════════════════════ */
 function mostrarToast(msg) {
-    let toast = document.getElementById('toast-global');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'toast-global';
-        toast.className = 'toast';
-        toast.innerHTML = `<div class="toast-dot"></div><span id="toast-msg"></span>`;
-        document.body.appendChild(toast);
+    let t = document.getElementById('toast-global');
+    if (!t) {
+        t = document.createElement('div');
+        t.id = 'toast-global'; t.className = 'toast';
+        t.innerHTML = `<div class="toast-dot"></div><span id="toast-msg"></span>`;
+        document.body.appendChild(t);
     }
     document.getElementById('toast-msg').textContent = msg;
-    toast.classList.add('visivel');
-    setTimeout(() => toast.classList.remove('visivel'), 3000);
+    t.classList.add('visivel');
+    setTimeout(() => t.classList.remove('visivel'), 3000);
 }
+
 
 
 /* ═══════════════════════════════════════════
