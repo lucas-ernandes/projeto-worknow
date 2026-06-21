@@ -17,10 +17,16 @@ function abrirFormProjeto() {
     projetoEditandoId = null;
     imagemProjetoBase64 = null;
     limparFormProjeto();
+    
     document.getElementById('projeto-form-titulo').textContent = 'Novo projeto';
     document.getElementById('projeto-form').style.display = 'block';
-    document.getElementById('proj-titulo').focus();
     document.getElementById('btn-add-projeto').style.display = 'none';
+    document.getElementById('proj-titulo').focus();
+
+    // TELA IGUAL DO EMPREGADOR: Esconde completamente as listas e a mensagem de vazio
+    if (document.getElementById('lista-projetos-view')) document.getElementById('lista-projetos-view').style.display = 'none';
+    if (document.getElementById('lista-projetos-edit')) document.getElementById('lista-projetos-edit').style.display = 'none';
+    if (document.getElementById('projetos-view-vazio')) document.getElementById('projetos-view-vazio').style.display = 'none';
 }
 
 /* ── Abre o formulário para EDITAR projeto (Cenário 4) ── */
@@ -47,6 +53,11 @@ function editarProjeto(id) {
     document.getElementById('projeto-form').style.display = 'block';
     document.getElementById('btn-add-projeto').style.display = 'none';
     document.getElementById('proj-titulo').focus();
+
+    // TELA IGUAL DO EMPREGADOR: Esconde completamente as listas e a mensagem de vazio para focar no form
+    if (document.getElementById('lista-projetos-view')) document.getElementById('lista-projetos-view').style.display = 'none';
+    if (document.getElementById('lista-projetos-edit')) document.getElementById('lista-projetos-edit').style.display = 'none';
+    if (document.getElementById('projetos-view-vazio')) document.getElementById('projetos-view-vazio').style.display = 'none';
 }
 
 /* ── Fecha o formulário ── */
@@ -56,6 +67,9 @@ function fecharFormProjeto() {
     limparFormProjeto();
     projetoEditandoId = null;
     imagemProjetoBase64 = null;
+
+    // Restaura a exibição correta da lista atual correspondente
+    renderProjetos();
 }
 
 function limparFormProjeto() {
@@ -99,7 +113,6 @@ function salvarProjeto() {
     const data      = document.getElementById('proj-data').value;
     const link      = document.getElementById('proj-link').value.trim();
 
-    // Cenário 2: validação de campos obrigatórios
     let valido = true;
 
     if (!titulo) {
@@ -119,14 +132,12 @@ function salvarProjeto() {
     if (!valido) return;
 
     if (projetoEditandoId !== null) {
-        // Edição
         const idx = projetos.findIndex(p => p.id === projetoEditandoId);
         if (idx !== -1) {
             projetos[idx] = { ...projetos[idx], titulo, descricao, area, data, link, imagem: imagemProjetoBase64 };
         }
         mostrarToast('✓ Projeto atualizado!');
     } else {
-        // Novo projeto (Cenário 1)
         projetos.push({
             id: Date.now(),
             titulo, descricao, area, data, link,
@@ -135,9 +146,8 @@ function salvarProjeto() {
         });
         mostrarToast('✓ Projeto salvo com sucesso!');
     }
-
+    renderProjetosEdit();
     fecharFormProjeto();
-    renderProjetos();
 }
 
 /* ── Excluir projeto com confirmação (Cenário 5) ── */
@@ -145,7 +155,6 @@ function excluirProjeto(id) {
     const proj = projetos.find(p => p.id === id);
     if (!proj) return;
 
-    // Cria modal de confirmação inline
     const modal = document.getElementById('modal-confirmacao');
     document.getElementById('modal-msg').textContent =
         `Tem certeza que deseja excluir "${proj.titulo}"? Essa ação não pode ser desfeita.`;
@@ -163,52 +172,20 @@ function fecharModal() {
     document.getElementById('modal-confirmacao').style.display = 'none';
 }
 
-/* ── Renderizar projetos ── */
+/* ── Renderizar projetos (Controlador centralizado) ── */
 function renderProjetos() {
-    renderProjetosView();
-    renderProjetosEdit();
-}
+    // Buscamos os dois containers que você criou no HTML
+    const listaView = document.getElementById('lista-projetos-view');
+    const listaEdit = document.getElementById('lista-projetos-edit');
+    const txtVazio = document.getElementById('projetos-view-vazio');
 
-// Modo visualização (Cenário 3)
-function renderProjetosView() {
-    const lista  = document.getElementById('lista-projetos-view');
-    const vazio  = document.getElementById('projetos-view-vazio');
-    if (!lista) return;
-
-    if (!projetos.length) {
-        lista.innerHTML = '';
-        vazio.style.display = '';
-        return;
+    // Controla se exibe a mensagem de "Nenhum projeto cadastrado"
+    if (txtVazio) {
+        txtVazio.style.display = projetos.length === 0 ? 'block' : 'none';
     }
 
-    vazio.style.display = 'none';
-    lista.innerHTML = projetos.map(p => `
-        <div class="projeto-card">
-            ${p.imagem ? `<img src="${p.imagem}" class="projeto-capa" alt="Capa do projeto">` : ''}
-            <div class="projeto-card-body">
-                <div class="projeto-card-top">
-                    <div>
-                        <h3 class="projeto-titulo">${p.titulo}</h3>
-                        <div class="projeto-meta">
-                            ${p.area ? `<span class="projeto-tag">${p.area}</span>` : ''}
-                            ${p.data ? `<span class="projeto-tag">📅 ${formatarData(p.data)}</span>` : ''}
-                        </div>
-                    </div>
-                </div>
-                <p class="projeto-desc">${p.descricao}</p>
-                ${p.link ? `<a href="${p.link}" target="_blank" class="projeto-link">🔗 Ver projeto</a>` : ''}
-                <span class="projeto-data-criacao">Adicionado em ${p.criadoEm}</span>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Modo edição — cards com botões editar/excluir
-function renderProjetosEdit() {
-    const lista = document.getElementById('lista-projetos-edit');
-    if (!lista) return;
-
-    lista.innerHTML = projetos.map(p => `
+    // Gerar o HTML idêntico para os cards
+    const htmlCards = projetos.map(p => `
         <div class="projeto-card">
             ${p.imagem ? `<img src="${p.imagem}" class="projeto-capa" alt="Capa">` : ''}
             <div class="projeto-card-body">
@@ -223,6 +200,98 @@ function renderProjetosEdit() {
                     <div class="projeto-acoes">
                         <button class="btn-proj-editar" onclick="editarProjeto(${p.id})">✏️ Editar</button>
                         <button class="btn-proj-excluir" onclick="excluirProjeto(${p.id})">🗑 Excluir</button>
+                    </div>
+                </div>
+                <p class="projeto-desc">${p.descricao}</p>
+                ${p.link ? `<a href="${p.link}" target="_blank" class="projeto-link">🔗 Ver projeto</a>` : ''}
+            </div>
+        </div>
+    `).join('');
+
+    // Coloca o resultado exatamente em cada lista do HTML
+    if (listaView) listaView.innerHTML = htmlCards;
+    if (listaEdit) listaEdit.innerHTML = htmlCards;
+}
+
+// Modo visualização (Cenário 3)
+function renderProjetosView() {
+    const lista  = document.getElementById('lista-projetos-view');
+    const listaEdit = document.getElementById('lista-projetos-edit');
+    const vazio  = document.getElementById('projetos-view-vazio');
+    const containerProjetos = document.getElementById('projetos-view');
+
+    // 🌟 CORREÇÃO AQUI: Garante que o contêiner geral e a lista de leitura fiquem VISÍVEIS
+    if (containerProjetos) containerProjetos.style.display = 'block';
+    if (lista) lista.style.display = 'grid'; // Força a exibição dos cards em grid
+    if (listaEdit) listaEdit.style.display = 'none'; // Esconde a lista de edição
+
+    if (!lista) return;
+
+    if (!projetos.length) {
+        lista.innerHTML = '';
+        if (vazio) vazio.style.display = 'block';
+        return;
+    }
+
+    if (vazio) vazio.style.display = 'none';
+    
+    lista.innerHTML = projetos.map(p => `
+        <div class="projeto-card">
+            ${p.imagem ? `<img src="${p.imagem}" class="projeto-capa" alt="Capa">` : ''}
+            <div class="projeto-card-body">
+                <div class="projeto-card-top">
+                    <div>
+                        <h3 class="projeto-titulo">${p.titulo}</h3>
+                        <div class="projeto-meta">
+                            ${p.area ? `<span class="projeto-tag">${p.area}</span>` : ''}
+                            ${p.data ? `<span class="projeto-tag">📅 ${formatarData(p.data)}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+                <p class="projeto-desc">${p.descricao}</p>
+                ${p.link ? `<a href="${p.link}" target="_blank" class="projeto-link">🔗 Ver projeto</a>` : ''}
+            </div>
+        </div>
+    `).join('');
+}
+
+// Modo edição — cards com botões editar/excluir
+function renderProjetosEdit() {
+    const lista  = document.getElementById('lista-projetos-edit');
+    const listaView = document.getElementById('lista-projetos-view');
+    const vazio  = document.getElementById('projetos-view-vazio');
+    const containerProjetos = document.getElementById('projetos-view');
+
+    // 🌟 CORREÇÃO AQUI: No modo edição, mostra a lista editável e esconde a de leitura
+    if (containerProjetos) containerProjetos.style.display = 'block';
+    if (lista) lista.style.display = 'block';
+    if (listaView) listaView.style.display = 'none';
+
+    if (!lista) return;
+
+    if (!projetos.length) {
+        lista.innerHTML = '';
+        if (vazio) vazio.style.display = 'block';
+        return;
+    }
+
+    if (vazio) vazio.style.display = 'none';
+    
+    lista.innerHTML = projetos.map(p => `
+        <div class="projeto-card">
+            ${p.imagem ? `<img src="${p.imagem}" class="projeto-capa" alt="Capa">` : ''}
+            <div class="projeto-card-body">
+                <div class="projeto-card-top">
+                    <div>
+                        <h3 class="projeto-titulo">${p.titulo}</h3>
+                        <div class="projeto-meta">
+                            ${p.area ? `<span class="projeto-tag">${p.area}</span>` : ''}
+                            ${p.data ? `<span class="projeto-tag">📅 ${formatarData(p.data)}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="projeto-acoes">
+                        <button class="btn-proj-editar" onclick=\"editarProjeto(${p.id})\">✏️ Editar</button>
+                        <button class="btn-proj-excluir" onclick=\"excluirProjeto(${p.id})\">🗑 Excluir</button>
                     </div>
                 </div>
                 <p class="projeto-desc">${p.descricao}</p>

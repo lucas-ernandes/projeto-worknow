@@ -48,7 +48,6 @@
                 <div class="avatar-inicial" id="avatar-inicial">U</div>
                 <div class="dropdown-perfil" id="dropdown-perfil">
                     <a href="perfil.html">👤 Meu Perfil</a>
-                    <a href="#">⚙️ Configurações</a>
                     <hr>
                     <a href="../../LOGIN/index.html" class="sair">🚪 Sair</a>
                 </div>
@@ -102,6 +101,9 @@
                     <button class="perfil-nav-btn" onclick="irAba('curriculo')">📄 Currículo</button>
                     <button class="perfil-nav-btn" onclick="irAba('projetos')">🚀 Projetos</button>
                 </nav>
+                <button class="btn-sidebar-verde" onclick="irParaNovoProjeto()">
+                    ＋ Publicar Projeto
+                </button>
             </aside>
 
             <main class="perfil-main">
@@ -387,13 +389,13 @@
                             </div>
                         </div>
 
-                        <!-- Lista editável de projetos -->
-                        <div id="lista-projetos-edit" class="projetos-lista"></div>
-
                         <!-- Botão adicionar -->
-                        <button class="btn-add-projeto" onclick="abrirFormProjeto()">
+                        <button class="btn-add-projeto" id="btn-add-projeto" onclick="abrirFormProjeto()">
                             ＋ Adicionar projeto
                         </button>
+
+                        <!-- Lista editável de projetos -->
+                        <div id="lista-projetos-edit" class="projetos-lista"></div>
                     </div>
 <!-- modal de confirmação------------>
                     <div class="modal-overlay" id="modal-confirmacao">

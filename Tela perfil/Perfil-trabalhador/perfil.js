@@ -10,9 +10,9 @@ let modoEdicao = false;
 let dadosSnapshot = {};
  
 function ativarEdicao() {
-    modoEdicao = true;
+   modoEdicao = true;
  
-    // salva snapshot antes de editar
+    // snapshot dos dados antes de editar
     dadosSnapshot = capturarDados();
  
     // mostra campos de input, esconde textos de view
@@ -28,8 +28,11 @@ function ativarEdicao() {
     // esconde áreas de view de portfolio/currículo
     document.getElementById('portfolio-view').style.display = 'none';
     document.getElementById('curriculo-view').style.display = 'none';
+    
+    // ⬇️ LINHA NOVA: Esconde a visualização limpa de projetos na hora de editar
+    document.getElementById('projetos-view').style.display = 'none';
  
-    atualizarSubtitulos(true);
+    atualizarSubtitulos();
     // registrar projeto  
     renderProjetosEdit(); // (14/06)
 
@@ -47,20 +50,28 @@ function cancelarEdicao() {
 function voltarModoView() {
     modoEdicao = false;
  
-    document.querySelectorAll('.campo-editavel').forEach(el => el.style.display = 'none');
+    // esconde inputs, mostra textos de view
     document.querySelectorAll('.campo-view').forEach(el => el.style.display = '');
-    document.querySelectorAll('.campo-view-vazio').forEach(el => {
-        // só mostra vazio se não houver conteúdo
-    });
+    document.querySelectorAll('.campo-editavel').forEach(el => el.style.display = 'none');
  
+    // mostra botão editar, esconde salvar/cancelar
     document.getElementById('btn-editar').style.display = '';
     document.getElementById('btn-salvar-topo').style.display = 'none';
     document.getElementById('btn-cancelar-topo').style.display = 'none';
  
+    // restaura as áreas de view de portfolio/currículo
     document.getElementById('portfolio-view').style.display = '';
     document.getElementById('curriculo-view').style.display = '';
+    
+    // ⬇️ LINHA NOVA: Mostra a visualização limpa de projetos ao sair da edição
+    document.getElementById('projetos-view').style.display = '';
+    
+    // ⬇️ LINHA NOVA: Garante que o formulário de criar projeto fecha se estiver aberto
+    if (typeof fecharFormProjeto === 'function') {
+        fecharFormProjeto();
+    }
  
-    atualizarSubtitulos(false);
+    atualizarSubtitulos();
     atualizarViews();
     calcularCompletude();
     renderProjetosView(); // (14/06)
@@ -453,6 +464,28 @@ function salvarPerfil() {
     voltarModoView();
     mostrarToast('✓ Perfil salvo com sucesso!');
 }
+
+/* ── Redireciona para a aba de projetos e abre o formulário de criação ── */
+function irParaNovoProjeto() {
+    // 1. Se o perfil não estiver em modo de edição, ativa o modo automaticamente
+    // Isso é necessário porque a lista editável e o formulário dependem da classe '.campo-editavel' visível
+    if (typeof modoEdicao !== 'undefined' && !modoEdicao) {
+        ativarEdicao();
+    } else if (typeof ativarEdicao === 'function' && !modoEdicao) {
+        ativarEdicao();
+    }
+
+    if (typeof irAba === 'function') {
+        irAba('projetos');
+    }
+
+    // 🌟 CHAMADA DA LIMPEZA AQUI
+    limparFormularioProjeto();
+
+    if (typeof abrirFormProjeto === 'function') {
+        abrirFormProjeto();
+    }
+}
  
  
 /* ═══════════════════════════════════════════
@@ -480,6 +513,10 @@ window.addEventListener('DOMContentLoaded', () => {
      calcularCompletude();
     renderNotificacoes();
     atualizarBadge();
+
+    if (typeof renderProjetosView === 'function') {
+        renderProjetosView();
+    };
 
     const hash = window.location.hash.replace('#', '');
 
