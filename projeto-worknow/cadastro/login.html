@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkNOW – Cadastro</title>
+    <link rel="stylesheet" href="login.css">
+    <link rel="icon" type="image/png" href="../img/logo.png">
+</head>
+<body>
+ 
+    <header>
+        <h1><span class="logo-work">Work</span><span class="logo-now">NOW</span></h1>
+        <nav>
+           <a href="../index.html"><button>Entrar</button></a> 
+        </nav>
+    </header>
+ 
+    <main>
+ 
+        <section class="left-side">
+            <h2>CRIE SUA CONTA <br> <span>E COMECE AGORA</span></h2>
+            <p>Escolha como você deseja começar na plataforma.</p>
+ 
+            <div class="tipo-conta">
+                <!-- ✅ CORRIGIDO: chama mostrarInfo -->
+                <div class="card-tipo ativo" onclick="mostrarInfo('trabalhador', this)">
+                    <h3> Trabalhador</h3>
+                    <p>Buscar vagas e serviços.</p>
+                </div>
+                <div class="card-tipo" onclick="mostrarInfo('empregador', this)">
+                    <h3> Empregador</h3>
+                    <p>Publicar oportunidades.</p>
+                </div>
+            </div>
+
+            <div class="info-perfil" id="info-trabalhador">
+                <h4>O que você vai ter como Trabalhador:</h4>
+                 <ul>
+                    <li>
+                        <strong>Visibilidade real</strong>
+                        <span>Seu perfil aparece para empresas que buscam exatamente o que você oferece.</span>
+                    </li>
+                    <li>
+                        <strong>Freelas e vagas no mesmo lugar</strong>
+                        <span>Trabalhos pontuais ou empregos fixos — você escolhe o que faz sentido pra você.</span>
+                    </li>
+                    <li>
+                        <strong>Propostas chegam até você</strong>
+                        <span>Não precisa ficar caçando vaga. Empregadores te encontram e mandam oferta direto.</span>
+                    </li>
+                    <li>
+                        <strong>Reputação que abre portas</strong>
+                        <span>Cada trabalho bem-feito vira avaliação no seu perfil. Quanto mais você entrega, mais você é procurado.</span>
+                    </li>
+                    <li>
+                        <strong>Histórico organizado</strong>
+                        <span>Acompanhe todas as suas candidaturas e contratos em um só painel.</span>
+                    </li>
+                </ul>
+            </div>
+ 
+            <div class="info-perfil oculto" id="info-empregador">
+                <h4>O que você pode fazer como Empregador:</h4>
+                <ul>
+                    <li>
+                        <strong>Acesso a profissionais verificados</strong>
+                        <span>Busque por área, habilidade ou disponibilidade e encontre quem você precisa mais rápido.</span>
+                    </li>
+                    <li>
+                        <strong>Publique em minutos</strong>
+                        <span>Crie uma vaga ou oportunidade de freela sem burocracia e já comece a receber candidatos.</span>
+                    </li>
+                    <li>
+                        <strong>Gerencie tudo num lugar só</strong>
+                        <span>Candidatos, conversas e contratações organizados no seu painel, sem planilha nem e-mail perdido.</span>
+                    </li>
+                    <li>
+                        <strong>Contrate PF ou PJ</strong>
+                        <span>Flexibilidade total para fechar com autônomos, MEIs ou empresas, do jeito que funcionar pra você.</span>
+                    </li>
+                    <li>
+                        <strong>Construa sua reputação como empresa</strong>
+                        <span>Avaliações de quem trabalhou com você geram confiança e atraem profissionais melhores.</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+ 
+        <section class="right-side">
+            <h3>Seja Bem Vindo</h3>
+            <h1>CRIAR SUA CONTA</h1>
+ 
+            <form action="cadastroBD.php" method="POST" onsubmit="return validarForm(event)">
+
+                <div class="radio-grupo">
+                    <label class="radio-opcao">
+                        <input type="radio" name="perfil_user" value="trabalhador" checked onchange="selecionarTipo('trabalhador')">
+                        <span>👨‍💻 Trabalhador</span>
+                    </label>
+                    <label class="radio-opcao">
+                        <input type="radio" name="perfil_user" value="empregador" onchange="selecionarTipo('empregador')">
+                        <span>🏢 Empregador</span>
+                    </label>
+                </div>
+
+                <input type="text" name="nome_user" placeholder="Nome completo" required>
+                <input type="email" name="email_user" placeholder="Email" required>
+
+                <input type="text" name="cpf_user" id="cpf" placeholder="CPF (000.000.000-00)" maxlength="14" inputmode="numeric" required>
+                <span class="campo-erro" id="erro-cpf"></span>
+
+                <input type="text" name="dt_nasc_user" id="nascimento" placeholder="Data de nascimento (dd/mm/aaaa)" maxlength="10" inputmode="numeric" required>
+                <span class="campo-erro" id="erro-nascimento"></span>
+
+                <input type="text" name="tel_user" id="telefone" placeholder="Telefone (opcional)" maxlength="15" inputmode="numeric">
+
+                <!-- SENHA COM OLHINHO -->
+                <div class="input-senha">
+                    <input type="password" name="senha_user" id="senha" placeholder="Senha" required>
+                    <button type="button" class="toggle-senha" onclick="toggleSenha('senha', this)" aria-label="Mostrar senha">
+                        <!-- olho fechado (padrão) -->
+                        <svg class="icone-olho" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
+                            <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>
+                            <line x1="1" y1="1" x2="23" y2="23"/>
+                        </svg>
+                    </button>
+                </div>
+ 
+                <!-- CONFIRMAR SENHA COM OLHINHO -->
+                <div class="input-senha">
+                    <input type="password" id="confirmar" placeholder="Confirmar senha" required>
+                    <button type="button" class="toggle-senha" onclick="toggleSenha('confirmar', this)" aria-label="Mostrar senha">
+                        <svg class="icone-olho" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
+                            <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>
+                            <line x1="1" y1="1" x2="23" y2="23"/>
+                        </svg>
+                    </button>
+                </div>
+                <span class="campo-erro" id="erro-senha"></span>
+
+                <label class="termos">
+                    <input type="checkbox" required>
+                    Aceito os <a href="#">termos de uso</a>
+                </label>
+
+                <input type="submit" value="Cadastrar">
+
+                <div class="register">
+                    <span>Já tem conta?</span>
+                    <a href="../index.html">Entrar!</a>
+                </div>
+            </form>
+        </section>
+    </main>
+    <footer class="footer footer-simples">
+      <p>©2026 WorkNOW. Todos os direitos reservados.</p>
+    </footer>
+ 
+    <script src="login.js"></script>
+ 
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkNOW – Perfil Empregador</title>
+    <link rel="stylesheet" href="../../LOGIN/style.css">
+    <link rel="stylesheet" href="perfil-empregador.css">
+    <link rel="icon" type="image/png" href="../../img/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Spinnaker&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <header>
+        <h1><span class="logo-work">Work</span><span class="logo-now">NOW</span></h1>
+        <nav>
+            <div class="notif-wrapper">
+                <button class="btn-notificacao" onclick="toggleNotificacoes()" aria-label="Notificações">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 01-3.46 0" />
+                    </svg>
+                    <span class="notif-badge" id="notif-badge">2</span>
+                </button>
+                <div class="dropdown-notif" id="dropdown-notif">
+                    <div class="notif-header">
+                        <strong>Notificações</strong>
+                        <button onclick="marcarTodasLidas()">Marcar todas como lidas</button>
+                    </div>
+                    <div class="notif-lista" id="notif-lista"></div>
+                    <div class="notif-footer"><a href="#">Ver todas</a></div>
+                </div>
+            </div>
+            <a href="../../LOGIN/index.html"><button>Início</button></a>
+
+            <div class="avatar-wrapper" onclick="toggleMenuPerfil()">
+                <img src="../../img/avatar-default.png" alt="ft_perfil/empresa" class="avatar-header"
+                    id="avatar-header-img"
+                    onerror="this.style.display='none'; document.getElementById('avatar-inicial').style.display='flex'">
+                <div class="avatar-inicial" id="avatar-inicial">E</div>
+                <div class="dropdown-perfil" id="dropdown-perfil">
+                    <a href="perfil_empre.html">🏢 Meu Perfil</a>
+                    <a href="#" onclick="irAba('vagas')">📋 Minhas Vagas</a>
+                    <a href="#">⚙️ Configurações</a>
+                    <hr>
+                    <a href="../../LOGIN/index.html" class="sair">🚪 Sair</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="perfil-container">
+
+        <!-- ── SIDEBAR ── -->
+        <aside class="perfil-sidebar">
+
+            <div class="avatar-area">
+                <div class="avatar-grande" id="avatar-grande">
+                    <img src="" alt="Foto do perfil" id="avatar-preview" style="display:none">
+                    <span id="avatar-letra">E</span>
+                    <!-- câmera só no modo edição -->
+                    <label for="upload-avatar" class="btn-trocar-foto campo-editavel" title="Trocar logo"
+                        style="display:none">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" width="16" height="16">
+                            <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
+                            <circle cx="12" cy="13" r="4" />
+                        </svg>
+                    </label>
+                    <input type="file" id="upload-avatar" accept="image/*" style="display:none">
+                </div>
+                <h2 class="perfil-nome" id="perfil-nome-exibido">Seu nome completo</h2>
+                <span class="perfil-badge">🏢 Empregador</span>
+
+                <!-- BOTÕES DE MODO -->
+                <button class="btn-modo-editar" id="btn-editar" onclick="ativarEdicao()">✏️ Editar perfil</button>
+                <button class="btn-modo-salvar campo-editavel" id="btn-salvar-topo" onclick="salvarPerfil()"
+                    style="display:none">💾 Salvar alterações</button>
+                <button class="btn-modo-cancelar campo-editavel" id="btn-cancelar-topo" onclick="cancelarEdicao()"
+                    style="display:none">✕ Cancelar</button>
+            </div>
+
+            <div class="perfil-completude">
+                <div class="completude-header">
+                    <span>Perfil completo</span>
+                    <strong id="pct-completude">0%</strong>
+                </div>
+                <div class="barra-completude">
+                    <div class="barra-fill" id="barra-fill"></div>
+                </div>
+                <p class="completude-dica" id="completude-dica">Preencha seu perfil para aparecer nas buscas.</p>
+            </div>
+
+            <nav class="perfil-nav">
+                <button class="perfil-nav-btn ativo" onclick="irAba('dados')">🏢 Dados do Empregador</button>
+                <button class="perfil-nav-btn" onclick="irAba('contato')">📞 Contato & Links</button>
+                <button class="perfil-nav-btn" onclick="irAba('vagas')">📋 Minhas vagas</button>
+                <button class="perfil-nav-btn" onclick="irAba('rascunhos')">📝 Rascunhos</button>
+                <button class="perfil-nav-btn btn-publicar" onclick="irAba('publicar')">
+                    <span class="btn-publicar-inner">＋ Publicar vaga</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-stats">
+                <div class="sidebar-stat">
+                    <strong id="stat-vagas">0</strong>
+                    <span>Vagas publicadas</span>
+                </div>
+                <div class="sidebar-stat-divider"></div>
+                <div class="sidebar-stat">
+                    <strong id="stat-candidatos">0</strong>
+                    <span>Candidatos</span>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- ── CONTEÚDO PRINCIPAL ── -->
+        <main class="perfil-main">
+
+            <!-- ABA: DADOS DO EMPREGADOR -->
+            <section class="aba ativa" id="aba-dados">
+                <div class="aba-header">
+                    <h2>🏢 Dados do Empregador</h2>
+                    <p id="subtitulo-dados">Visualizando seu perfil público.</p>
+                </div>
+                <div class="form-grid">
+
+                    <div class="campo">
+                        <label>Seu nome completo</label>
+                        <p class="campo-view" id="view-nome">—</p>
+                        <input class="campo-editavel" type="text" id="campo-nome" placeholder="Razão social ou nome"
+                            oninput="atualizarNomeExibido(this.value)" style="display:none">
+                    </div>
+
+                    <div class="campo">
+                        <label>Ramo de atuação</label>
+                        <p class="campo-view" id="view-ramo">—</p>
+                        <select class="campo-editavel" id="campo-ramo" style="display:none">
+                            <option value="" disabled selected>Selecione</option>
+                            <option>Tecnologia da Informação</option>
+                            <option>Construção Civil</option>
+                            <option>Saúde & Bem-estar</option>
+                            <option>Educação</option>
+                            <option>Varejo & Comércio</option>
+                            <option>Logística & Transporte</option>
+                            <option>Gastronomia & Hospitalidade</option>
+                            <option>Marketing & Comunicação</option>
+                            <option>Administrativo & Financeiro</option>
+                            <option>Outro</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label>CNPJ</label>
+                        <p class="campo-view" id="view-cnpj">—</p>
+                        <input class="campo-editavel" type="text" id="campo-cnpj" placeholder="00.000.000/0000-00"
+                            maxlength="18" inputmode="numeric" style="display:none">
+                    </div>
+
+                    <div class="campo">
+                        <label>Você contrata como</label>
+                        <p class="campo-view" id="view-porte">—</p>
+                        <select class="campo-editavel" id="campo-porte" style="display:none">
+                            <option value="" disabled selected>Selecione</option>
+                            <option>MEI / Autônomo</option>
+                            <option>Microempresa (até 9 func.)</option>
+                            <option>Pequena (10–49 func.)</option>
+                            <option>Média (50–249 func.)</option>
+                            <option>Grande (250+ func.)</option>
+                        </select>
+                    </div>
+
+                    <div class="campo campo-full">
+                        <label>Sobre você</label>
+                        <p class="campo-view" id="view-bio">—</p>
+                        <textarea class="campo-editavel" id="campo-bio"
+                            placeholder="Conte sobre você, sua empresa, cultura, missão..." rows="4" maxlength="600"
+                            style="display:none"></textarea>
+                        <span class="char-count campo-editavel" style="display:none">
+                            <span id="bio-count">0</span>/600
+                        </span>
+                    </div>
+
+                    <div class="campo">
+                        <label>Cidade</label>
+                        <p class="campo-view" id="view-cidade">—</p>
+                        <input class="campo-editavel" type="text" id="campo-cidade" placeholder="Ex: São Paulo, SP"
+                            style="display:none">
+                    </div>
+
+                    <div class="campo">
+                        <label>Modalidade de trabalho</label>
+                        <p class="campo-view" id="view-modalidade">—</p>
+                        <select class="campo-editavel" id="campo-modalidade" style="display:none">
+                            <option value="" disabled selected>Selecione</option>
+                            <option>Presencial</option>
+                            <option>Remoto</option>
+                            <option>Híbrido</option>
+                            <option>A definir por vaga</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="aba-actions campo-editavel" style="display:none">
+                    <button class="btn-salvar" onclick="salvarPerfil()">Salvar dados</button>
+                </div>
+            </section>
+
+            <!-- ABA: CONTATO & LINKS -->
+            <section class="aba" id="aba-contato">
+                <div class="aba-header">
+                    <h2>📞 Contato & Links</h2>
+                    <p id="subtitulo-contato">Visualizando suas informações de contato.</p>
+                </div>
+                <div class="form-grid">
+
+                    <div class="campo">
+                        <label>E-mail de contato</label>
+                        <p class="campo-view" id="view-email">—</p>
+                        <input class="campo-editavel" type="email" id="campo-email" placeholder="contato@empresa.com"
+                            style="display:none">
+                    </div>
+
+                    <div class="campo">
+                        <label>Telefone / WhatsApp</label>
+                        <p class="campo-view" id="view-telefone">—</p>
+                        <input class="campo-editavel" type="text" id="campo-telefone" placeholder="(00) 00000-0000"
+                            maxlength="15" inputmode="numeric" style="display:none">
+                    </div>
+
+                    <div class="campo">
+                        <label>Site</label>
+                        <p class="campo-view" id="view-site">—</p>
+                        <input class="campo-editavel" type="url" id="campo-site" placeholder="https://suaempresa.com.br"
+                            style="display:none">
+                    </div>
+
+                    <div class="campo">
+                        <label>LinkedIn</label>
+                        <p class="campo-view" id="view-linkedin">—</p>
+                        <input class="campo-editavel" type="url" id="campo-linkedin"
+                            placeholder="https://linkedin.com/company/..." style="display:none">
+                    </div>
+
+                </div>
+                <div class="aba-actions campo-editavel" style="display:none">
+                    <button class="btn-salvar" onclick="salvarPerfil()">Salvar contato</button>
+                </div>
+            </section>
+
+            <!-- ABA: MINHAS VAGAS (sem modo view/edição — já é funcional) -->
+            <section class="aba" id="aba-vagas">
+                <div class="aba-header">
+                    <h2>📋 Minhas vagas</h2>
+                    <p>Gerencie as oportunidades que você publicou na plataforma.</p>
+                </div>
+                <div class="vagas-toolbar">
+                    <input type="text" class="vagas-busca" placeholder="🔍 Buscar vaga..."
+                        oninput="filtrarVagas(this.value)">
+                    <button class="btn-nova-vaga" onclick="irAba('publicar')">＋ Nova vaga</button>
+                </div>
+                <div id="lista-vagas" class="lista-vagas">
+                    <div class="vagas-empty">
+                        <span>📭</span>
+                        <p>Você ainda não publicou nenhuma vaga.</p>
+                        <button onclick="irAba('publicar')">Publicar primeira vaga</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABA: PUBLICAR VAGA -->
+            <section class="aba" id="aba-publicar">
+                <div class="aba-header">
+                    <h2>＋ Publicar nova vaga</h2>
+                    <p>Preencha os detalhes da oportunidade. Campos com <span class="obrigatorio">*</span> são
+                        obrigatórios.</p>
+                </div>
+                <div class="form-grid">
+                    <div class="campo campo-full">
+                        <label>Título da vaga <span class="obrigatorio">*</span></label>
+                        <input type="text" id="vaga-titulo"
+                            placeholder="Ex: Desenvolvedor Front-end Júnior, Eletricista Residencial...">
+                    </div>
+                    <div class="campo">
+                        <label>Área <span class="obrigatorio">*</span></label>
+                        <select id="vaga-area">
+                            <option value="" disabled selected>Selecione a área</option>
+                            <option>Tecnologia da Informação</option>
+                            <option>Design & UX</option>
+                            <option>Marketing & Comunicação</option>
+                            <option>Construção Civil</option>
+                            <option>Saúde & Bem-estar</option>
+                            <option>Educação</option>
+                            <option>Logística & Transporte</option>
+                            <option>Gastronomia</option>
+                            <option>Administrativo & Financeiro</option>
+                            <option>Outro</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label>Tipo de contrato <span class="obrigatorio">*</span></label>
+                        <select id="vaga-tipo">
+                            <option value="" disabled selected>Selecione</option>
+                            <option>CLT (Efetivo)</option>
+                            <option>Freelance / Projeto</option>
+                            <option>PJ</option>
+                            <option>Estágio</option>
+                            <option>Temporário</option>
+                            <option>Voluntário</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label>Modalidade</label>
+                        <select id="vaga-modalidade">
+                            <option value="" disabled selected>Selecione</option>
+                            <option>Presencial</option>
+                            <option>Remoto</option>
+                            <option>Híbrido</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label>Nível de experiência</label>
+                        <select id="vaga-nivel">
+                            <option value="" disabled selected>Selecione</option>
+                            <option>Sem experiência / Iniciante</option>
+                            <option>Júnior (1–2 anos)</option>
+                            <option>Pleno (3–5 anos)</option>
+                            <option>Sênior (5+ anos)</option>
+                        </select>
+                    </div>
+                    <div class="campo campo-full">
+                        <label>Escopo / Descrição da vaga <span class="obrigatorio">*</span></label>
+                        <textarea id="vaga-descricao"
+                            placeholder="Descreva detalhadamente o que o profissional vai fazer..." rows="5"
+                            maxlength="1500"></textarea>
+                        <span class="char-count"><span id="desc-count">0</span>/1500</span>
+                    </div>
+                    <div class="campo campo-full">
+                        <label>Habilidades desejadas<span class="obrigatorio">*</span></label>
+                        <div class="tags-input-wrapper">
+                            <div class="tags-lista" id="tags-vaga-lista"></div>
+                            <input type="text" id="tag-vaga-input" placeholder="Digite uma habilidade e pressione Enter"
+                                onkeydown="adicionarTagVaga(event)">
+                        </div>
+                        <span class="campo-dica">Ex: React, Excel, Inglês, CNH... (máx. 10)</span>
+                    </div>
+                    <div class="campo destaque-campo">
+                        <label>💰 Orçamento proposto <span class="obrigatorio">*</span>
+                            <span class="campo-dica-inline">Obrigatório para publicar</span>
+                        </label>
+                        <input type="number" id="vaga-orcamento" min="0.01" steq="0.01"
+                            placeholder="Ex: R$ 3.000/mês, R$ 500 por projeto, A combinar">
+                        <span class="campo-erro" id="erro-orcamento"></span>
+                    </div>
+                    <div class="campo destaque-campo">
+                        <label>📅 Prazo esperado <span class="obrigatorio">*</span>
+                            <span class="campo-dica-inline">Obrigatório para publicar</span>
+                        </label>
+                        <input type="text" id="vaga-prazo"
+                            placeholder="Ex: Imediato, 2 semanas, 3 meses, Indeterminado...">
+                        <span class="campo-erro" id="erro-prazo"></span>
+                    </div>
+                    <div class="campo">
+                        <label>Local / Cidade</label>
+                        <input type="text" id="vaga-local" placeholder="Ex: São Paulo, SP ou Remoto">
+                    </div>
+                    <div class="campo">
+                        <label>Vagas disponíveis</label>
+                        <input type="number" id="vaga-quantidade" placeholder="Ex: 1" min="1" max="999">
+                    </div>
+                    <div class="campo campo-full">
+                        <label>Benefícios oferecidos</label>
+                        <input type="text" id="vaga-beneficios"
+                            placeholder="Ex: Vale transporte, plano de saúde, home office...">
+                    </div>
+                </div>
+                <div class="aba-actions publicar-actions">
+                    <button class="btn-rascunho" onclick="salvarRascunho()">💾 Salvar rascunho</button>
+                    <button class="btn-salvar" onclick="publicarVaga()">🚀 Publicar vaga</button>
+                </div>
+            </section>
+            
+        <!-- SALVAR RASCUNHOS -->
+            <section class="aba" id="aba-rascunhos">
+                <div class="aba-header">
+                    <h2>📝 Seus Rascunhos</h2>
+                    <p>Vagas que você começou a estruturar, mas ainda não liberou para os candidatos.</p>
+                </div>
+
+                <div id="lista-rascunhos" class="vagas-lista">
+                </div>
+                <p id="rascunhos-vazio" class="campo-view-vazio" style="text-align: center; margin-top: 20px;">
+                    Nenhum rascunho salvo no momento.
+                </p>
+            </section>
+        </main>
+    </div>
+
+    <script src="perfil-empregador.js"></script>
+</body>
+
+</html>
