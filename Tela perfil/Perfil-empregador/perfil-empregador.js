@@ -82,7 +82,7 @@ function capturarDados() {
     const g = id => document.getElementById(id)?.value || '';
     return {
         nome: g('campo-nome'), ramo: g('campo-ramo'), cnpj: g('campo-cnpj'),
-        porte: g('campo-porte'), bio: g('campo-bio'), cidade: g('campo-cidade'),
+        porte: g('campo-porte'), bio: g('campo-bio'), city: g('campo-cidade'),
         modalidade: g('campo-modalidade'), email: g('campo-email'),
         telefone: g('campo-telefone'), site: g('campo-site'), linkedin: g('campo-linkedin'),
     };
@@ -92,7 +92,7 @@ function restaurarDados(snap) {
     if (!snap) return;
     const s = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
     s('campo-nome', snap.nome); s('campo-ramo', snap.ramo); s('campo-cnpj', snap.cnpj);
-    s('campo-porte', snap.porte); s('campo-bio', snap.bio); s('campo-cidade', snap.cidade);
+    s('campo-porte', snap.porte); s('campo-bio', snap.bio); s('campo-cidade', snap.city);
     s('campo-modalidade', snap.modalidade); s('campo-email', snap.email);
     s('campo-telefone', snap.telefone); s('campo-site', snap.site); s('campo-linkedin', snap.linkedin);
 }
@@ -152,8 +152,15 @@ function atualizarBadge() {
 function irAba(nome) {
     document.querySelectorAll('.aba').forEach(a => a.classList.remove('ativa'));
     document.querySelectorAll('.perfil-nav-btn').forEach(b => b.classList.remove('ativo'));
-    document.getElementById('aba-' + nome).classList.add('ativa');
+    
+    const targetAba = document.getElementById('aba-' + nome);
+    if (targetAba) targetAba.classList.add('ativa');
+    
     document.querySelector(`.perfil-nav-btn[onclick="irAba('${nome}')"]`)?.classList.add('ativo');
+
+    // GARANTE QUE AS LISTAGENS SÃO RE-RENDERIZADAS AO NAVEGAR
+    if (nome === 'rascunhos') renderizarRascunhos();
+    if (nome === 'vagas') renderVagas();
 }
 
 
@@ -253,9 +260,11 @@ document.querySelector('.tags-input-wrapper').addEventListener('click', () => {
 const vagas = [];
 
 function publicarVaga() {
-    // Limpa mensagens de erro anteriores
-    document.getElementById('erro-orcamento').textContent = '';
-    if (document.getElementById('erro-prazo')) document.getElementById('erro-prazo').textContent = '';
+    // Limpa mensagens de erro anteriores de forma completa
+    document.querySelectorAll('.campo-erro').forEach(el => {
+        el.textContent = '';
+        el.style.display = 'none';
+    });
 
     // Captura dos valores
     const titulo = document.getElementById('vaga-titulo').value.trim();
@@ -273,17 +282,31 @@ function publicarVaga() {
     // Validações
     let temErro = false;
 
-    if (!titulo || !descricao) {
-        mostrarToast('⚠ Título e Descrição são campos obrigatórios.');
-        return;
+    if (!titulo) {
+        const errTit = document.getElementById('erro-titulo');
+        if (errTit) { errTit.textContent = 'O título da vaga é obrigatório.'; errTit.style.display = 'block'; }
+        temErro = true;
+    }
+    
+    if (!descricao) {
+        mostrarToast('⚠ A descrição é um campo obrigatório.');
+        temErro = true;
     }
 
     const valorOrcamento = parseFloat(orcamentoRaw);
     if (!orcamentoRaw) {
-        document.getElementById('erro-orcamento').textContent = 'O orçamento proposto é obrigatório.';
+        const errOrc = document.getElementById('erro-orcamento');
+        if (errOrc) { errOrc.textContent = 'O orçamento proposto é obrigatório.'; errOrc.style.display = 'block'; }
         temErro = true;
     } else if (isNaN(valorOrcamento) || valorOrcamento <= 0) {
-        document.getElementById('erro-orcamento').textContent = 'O orçamento deve ser um valor maior que zero.';
+        const errOrc = document.getElementById('erro-orcamento');
+        if (errOrc) { errOrc.textContent = 'O orçamento deve ser um valor maior que zero.'; errOrc.style.display = 'block'; }
+        temErro = true;
+    }
+
+    if (!prazo) {
+        const errPrz = document.getElementById('erro-prazo');
+        if (errPrz) { errPrz.textContent = 'O prazo esperado é obrigatório.'; errPrz.style.display = 'block'; }
         temErro = true;
     }
 
@@ -409,8 +432,6 @@ function renderVagas() {
 
     lista.innerHTML = vagas.map(v => `
         <div class="vaga-card" style="position: relative;">
-            
-            <!-- ⬇️ BOTÃO DE EXCLUSÃO REPOSICIONADO E DESTACADO -->
             <div class="vaga-acoes campo-editavel" style="display: ${modoEdicao ? 'block' : 'none'}; position: absolute; top: 15px; right: 15px; z-index: 10;">
                 <button onclick="excluirVaga(${v.id})" 
                         style="background: #fdf2f2; color: #e74c3c; border: 1px solid #fde2e2; border-radius: 5px; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: all 0.2s;" 
@@ -480,19 +501,16 @@ function filtrarVagas(valor) {
 }
 
 /* ═══════════════════════════════════════════
-   apagar vaga
+   APAGAR VAGA
 ═══════════════════════════════════════════ */
 function excluirVaga(id) {
-    // Confirmação rápida de segurança para evitar exclusões por engano
     if (!confirm('Tem certeza de que deseja excluir permanentemente esta vaga publicada?')) {
         return;
     }
 
     const index = vagas.findIndex(v => v.id === id);
     if (index !== -1) {
-        vagas.splice(index, 1); // Remove do array oficial
-        
-        // Atualiza tudo no seu sistema instantaneamente
+        vagas.splice(index, 1);
         renderVagas();
         atualizarStatVagas();
         calcularCompletude();
@@ -511,7 +529,6 @@ const rascunhosVagas = [];
 function salvarRascunho() {
     const titulo = document.getElementById('vaga-titulo').value;
 
-    // Validação super simples: pelo menos o título precisa estar preenchido para salvar
     if (!titulo || titulo.trim() === '') {
         const erroTitulo = document.getElementById('erro-titulo');
         if (erroTitulo) {
@@ -522,7 +539,6 @@ function salvarRascunho() {
         return;
     }
 
-    // Captura os dados do formulário (mesmo que estejam parcialmente vazios)
     const novoRascunho = {
         id: Date.now(),
         titulo: titulo,
@@ -540,29 +556,19 @@ function salvarRascunho() {
         dataCriacao: new Date().toLocaleDateString('pt-BR')
     };
 
-    // Adiciona na nossa lista temporária de rascunhos
     rascunhosVagas.push(novoRascunho);
-
-    // Limpa o formulário usando a função que você já tem criada!
     limparFormVaga();
 
-    // Remove qualquer aviso de erro de validação antigo que tenha ficado na tela
-    document.querySelectorAll('.campo-erro').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.campo-erro').forEach(el => {
+        el.textContent = '';
+        el.style.display = 'none';
+    });
 
-    // Usa a sua própria função de Toast para avisar o usuário
     if (typeof mostrarToast === 'function') {
         mostrarToast('✓ Rascunho guardado com sucesso!');
-    } else {
-        alert('✓ Rascunho guardado com sucesso!');
     }
 
-    // Atualiza a listagem visual dos rascunhos
-    renderizarRascunhos();
-
-    // Redireciona o empregador para a nova aba de rascunhos para ele ver o card lá!
-    if (typeof irAba === 'function') {
-        irAba('rascunhos');
-    }
+    irAba('rascunhos');
 }
 
 function renderizarRascunhos() {
@@ -619,7 +625,6 @@ function publicarRascunhoDireto(id) {
 
     const r = rascunhosVagas[index];
 
-    // Trata o orçamento se ele veio limpo do rascunho
     let valorOrcamento = parseFloat(r.orcamento);
     if (isNaN(valorOrcamento) || valorOrcamento <= 0) {
         valorOrcamento = 0;
@@ -633,7 +638,6 @@ function publicarRascunhoDireto(id) {
     const dataHoraPublicacao = agora.toLocaleDateString('pt-BR') + ' às ' +
         agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
-    // Cria a vaga no formato oficial exigido pelo seu script
     const novaVagaOficial = {
         id: Date.now(),
         empregadorId: 42,
@@ -654,13 +658,11 @@ function publicarRascunhoDireto(id) {
         candidatos: 0,
     };
 
-    // Insere na lista oficial de vagas ativas
     vagas.push(novaVagaOficial);
 
     renderVagas();
     atualizarStatVagas();
     calcularCompletude();
-    // Remove da lista de rascunhos
     rascunhosVagas.splice(index, 1);
     renderizarRascunhos();
 
@@ -668,10 +670,7 @@ function publicarRascunhoDireto(id) {
         mostrarToast('🚀 Vaga do rascunho publicada com sucesso!');
     }
 
-    // Leva o usuário para a aba de "Vagas Divulgadas" (ou "vagas") para ver que funcionou
-    if (typeof irAba === 'function') {
-        irAba('vagas'); // ou o ID da aba onde lista suas vagas ativas
-    }
+    irAba('vagas');
 }
 
 /* ═══════════════════════════════════════════
@@ -683,7 +682,6 @@ function editarRascunho(id) {
 
     const r = rascunhosVagas[index];
 
-    // 1. Devolve os valores para o formulário oficial de publicação
     document.getElementById('vaga-titulo').value = r.titulo || '';
     document.getElementById('vaga-descricao').value = r.descricao || '';
     document.getElementById('vaga-orcamento').value = r.orcamento || '';
@@ -692,31 +690,24 @@ function editarRascunho(id) {
     document.getElementById('vaga-quantidade').value = r.quantidade || '';
     document.getElementById('vaga-beneficios').value = r.beneficios || '';
 
-    // Devolve os selects selecionando o valor correto
     document.getElementById('vaga-area').value = r.area || document.getElementById('vaga-area').options[0].value;
     document.getElementById('vaga-tipo').value = r.tipo || document.getElementById('vaga-tipo').options[0].value;
     document.getElementById('vaga-modalidade').value = r.modalidade || document.getElementById('vaga-modalidade').options[0].value;
     document.getElementById('vaga-nivel').value = r.nivel || document.getElementById('vaga-nivel').options[0].value;
 
-    // Recupera as tags antigas se houverem
-    tagsVaga.length = 0; // limpa o array global atual
+    tagsVaga.length = 0;
     if (r.tags && r.tags.length > 0) {
         r.tags.forEach(t => tagsVaga.push(t));
     }
-    renderTagsVaga(); // redesenha as tags na tela
+    renderTagsVaga();
 
-    // Atualiza o contador de caracteres da descrição
     const descCount = document.getElementById('desc-count');
     if (descCount) descCount.textContent = (r.descricao || '').length;
 
-    // 2. Remove o rascunho da lista de guardados (pois ele voltou para edição ativa)
     rascunhosVagas.splice(index, 1);
     renderizarRascunhos();
 
-    // 3. Leva o empregador de volta para a aba de formulário/publicação
-    if (typeof irAba === 'function') {
-        irAba('publicar');
-    }
+    irAba('publicar');
     
     if (typeof mostrarToast === 'function') {
         mostrarToast('Rascunho carregado no formulário!');
@@ -744,6 +735,30 @@ function mostrarToast(msg) {
    INIT
 ═══════════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', () => {
+    // 1. Verifica se existe alguma hash na URL (ex: #publicar ou #rascunhos)
+    const hash = window.location.hash.replace('#', '');
+
+    // 2. Se o usuário veio da dashboard querendo publicar, joga ele na aba certa
+    if (hash === 'postar_vaga') {
+        if (typeof irAba === 'function') {
+            irAba('publicar');
+        }
+    } else if (hash === 'rascunhos') {
+        if (typeof irAba === 'function') {
+            irAba('rascunhos');
+        }
+    } else {
+        // SE NÃO TIVER HASH (Ex: Clicou em "Meu Perfil" normal)
+        // Se não tiver nada na URL, carrega a aba padrão (Vagas ou Início)
+        if (typeof irAba === 'function') {
+            irAba('dados'); // ou a sua aba padrão inicial
+        }
+    }
+    
+    // Opcional: Limpa a hash da URL depois de ler, para ficar o endereço limpo
+    window.location.hash = '';
+
+
     voltarModoView(); // inicia em modo visualização
     calcularCompletude();
     renderNotificacoes();
