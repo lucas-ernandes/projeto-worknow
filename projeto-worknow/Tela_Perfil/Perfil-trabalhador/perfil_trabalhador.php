@@ -143,8 +143,9 @@ if ($usuario_id) {
             </aside>
 
             <main class="perfil-main">
+                <form action="trabalhadorBD.php" method="POST" enctype="multipart/form-data">
 
-                <section class="aba ativa" id="aba-dados">
+                    <section class="aba ativa" id="aba-dados">
                     
                     <div class="aba-header">
                         <h2>Dados pessoais</h2>
@@ -197,12 +198,12 @@ if ($usuario_id) {
                         <div class="campo">
                             <label>Portfólio / Site</label>
                             <p class="campo-view" id="view-site">—</p>
-                            <input class="campo-editavel" type="url" name="url_portfolio" id="campo-site"  placeholder="https://seusite.com" style="display:none">
+                            <input class="campo-editavel" type="url" name="url_portfolio" id="campo-site" value="<?php echo htmlspecialchars($perfil['link_portfolio'] ?? ''); ?>" placeholder="https://seusite.com" style="display:none">
                         </div>
                     </div>
 
                     <div class="aba-actions campo-editavel" style="display:none">
-                        <button class="btn-salvar" onclick="salvarPerfil()">Salvar dados</button>
+                        <button type="submit" class="btn-salvar" onclick="salvarPerfil()">Salvar dados</button>
                     </div>
                 </section>
 
@@ -216,7 +217,7 @@ if ($usuario_id) {
                         <div class="campo">
                             <label>Área de atuação</label>
                             <p class="campo-view" id="view-area">—</p>
-                            <select class="campo-editavel" id="campo-area" style="display:none">
+                            <select class="campo-editavel" name="area_atuacao" id="campo-area" style="display:none">
                                 <option value="" disabled selected <?php echo empty($perfil['area']) ? 'selected' : ''; ?>>
                                     Selecione sua área
                                 </option>
@@ -300,7 +301,7 @@ if ($usuario_id) {
                         <div class="campo">
                             <label>Nível de experiência</label>
                             <p class="campo-view" id="view-nivel">—</p>
-                            <select class="campo-editavel" id="campo-nivel" style="display:none">
+                            <select class="campo-editavel" name="lvl_exp" id="campo-nivel" style="display:none">
                                 <option value="" disabled selected <?php echo empty($perfil['nivel_exp']) ? 'selected' : ''; ?>>
                                     Selecione
                                 </option>
@@ -351,7 +352,7 @@ if ($usuario_id) {
                     </div>
 
                     <div class="aba-actions campo-editavel" style="display:none">
-                        <button class="btn-salvar" onclick="salvarPerfil()">Salvar perfil profissional</button>
+                        <button type="submit" class="btn-salvar" onclick="salvarPerfil()">Salvar perfil profissional</button>
                     </div>
                 </section>
 
@@ -371,14 +372,14 @@ if ($usuario_id) {
                             <p><strong>Arraste seus arquivos aqui</strong> ou clique para selecionar</p>
                             <span>Somente PDF · Máximo 5MB por arquivo</span>
                             <label for="input-portfolio" class="btn-upload-label">Selecionar PDF</label>
-                            <input type="file" id="input-portfolio" accept=".pdf" multiple style="display:none"
+                            <input type="file" name="arq_portfolio" id="input-portfolio" accept=".pdf" multiple style="display:none"
                                 onchange="processarArquivos(this.files, 'portfolio')">
                         </div>
                         <div class="arquivos-lista" id="lista-portfolio"></div>
                     </div>
 
                     <div class="aba-actions campo-editavel" style="display:none">
-                        <button class="btn-salvar" onclick="salvarPerfil()">Salvar portfólio</button>
+                        <button type="submit" class="btn-salvar" onclick="salvarPerfil()">Salvar portfólio</button>
                     </div>
                 </section>
 
@@ -399,14 +400,14 @@ if ($usuario_id) {
                             <p><strong>Arraste seu currículo aqui</strong> ou clique para selecionar</p>
                             <span>Somente PDF · Máximo 5MB</span>
                             <label for="input-curriculo" class="btn-upload-label">Selecionar PDF</label>
-                            <input type="file" id="input-curriculo" accept=".pdf" style="display:none"
+                            <input type="file" name="arq_curriculo" id="input-curriculo" accept=".pdf" style="display:none"
                                 onchange="processarArquivos(this.files, 'curriculo')">
                         </div>
                         <div class="arquivos-lista" id="lista-curriculo"></div>
                     </div>
 
                     <div class="aba-actions campo-editavel" style="display:none">
-                        <button class="btn-salvar" onclick="salvarPerfil()">Salvar currículo</button>
+                        <button type="submit" class="btn-salvar" onclick="salvarPerfil()">Salvar currículo</button>
                     </div>
                 </section>
 

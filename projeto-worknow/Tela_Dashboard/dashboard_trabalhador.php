@@ -22,7 +22,7 @@ if ($_SESSION['usuario_perfil'] === 'empregador') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkNOW – Início</title>
-    <link rel="stylesheet" href="../LOGIN/style.css">
+    <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="dashboard_trabaio.css">
     <link rel="icon" type="image/png" href="../img/logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Spinnaker&display=swap"
