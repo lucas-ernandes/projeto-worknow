@@ -120,6 +120,7 @@ function irView(view, linkEl) {
     document.getElementById('view-painel').style.display = 'none';
     document.getElementById('view-candidaturas').style.display = 'none';
     document.getElementById('view-suporte').style.display = 'none';
+    document.getElementById('view-mensagens').style.display = 'none'; // Adicionado
 
     // Mostra apenas a tela desejada
     if (view === 'painel') {
@@ -129,6 +130,9 @@ function irView(view, linkEl) {
         renderCandidaturas();
     } else if (view === 'suporte') {
         document.getElementById('view-suporte').style.display = 'flex';
+    } else if (view === 'mensagens') {
+        document.getElementById('view-mensagens').style.display = 'flex'; // Adicionado
+        renderConversas(); // Adicionado
     }
 }
 
@@ -626,6 +630,127 @@ function atualizarBadge() {
     const badge = document.getElementById('notif-badge');
     badge.textContent = naoLidas;
     badge.style.display = naoLidas > 0 ? 'flex' : 'none';
+}
+
+/* ═══════════════════════════════════════════
+   SISTEMA DE MENSAGENS (CONTEXTO TRABALHADOR)
+═══════════════════════════════════════════ */
+let conversaAtivaId = null;
+
+// Mock de dados com situações de entrevistas e propostas reais para o Daniel
+const conversasDB = [
+    {
+        id: 1,
+        empresa: 'TechStore',
+        corEmpresa: '#0037ff',
+        inicialEmpresa: 'T',
+        mensagens: [
+            { remetente: 'empresa', texto: 'Olá Daniel! Avaliamos seu perfil e curtimos muito seu portfólio em React e JavaScript. Você teria disponibilidade para um bate-papo técnico com nosso gestor nesta quinta às 14h?', tempo: '10:30' }
+        ]
+    },
+    {
+        id: 2,
+        empresa: 'Agência Criativa',
+        corEmpresa: '#8b5cf6',
+        inicialEmpresa: 'A',
+        mensagens: [
+            { remetente: 'empresa', texto: 'Fala Daniel, tudo bem? Vimos seu interesse na vaga de criação de conteúdo. Você tem algum link com peças que já desenvolveu no Canva ou Illustrator para darmos uma olhada?', tempo: 'Ontem' },
+            { remetente: 'trabalhador', texto: 'Olá! Tudo ótimo por aqui. Tenho sim, separei meus melhores layouts de identidades visuais e artes recentes. Posso enviar o link direto por aqui?', tempo: 'Ontem' },
+            { remetente: 'empresa', texto: 'Com certeza! Pode mandar aqui que eu repasso direto para o pessoal do design avaliar. Valeu!', tempo: 'Ontem' }
+        ]
+    },
+    {
+        id: 3,
+        empresa: 'StartupXYZ',
+        corEmpresa: '#e53e3e',
+        inicialEmpresa: 'S',
+        mensagens: [
+            { remetente: 'empresa', texto: 'Parabéns, Daniel! Sua candidatura avançou de fase. Acabamos de liberar o link do seu desafio técnico no seu e-mail cadastrado. Qualquer dúvida nos avise.', tempo: '2 dias atrás' }
+        ]
+    }
+];
+
+// Renderiza a lista lateral de conversas com as empresas
+function renderConversas() {
+    const lista = document.getElementById('chat-lista-conversas');
+    if (!lista) return;
+
+    lista.innerHTML = conversasDB.map(c => {
+        const ultimaMsg = c.mensagens[c.mensagens.length - 1];
+        const textoExibido = ultimaMsg ? ultimaMsg.texto : 'Nenhuma mensagem recente.';
+        const tempoExibido = ultimaMsg ? ultimaMsg.tempo : '';
+        const classeAtivo = conversaAtivaId === c.id ? 'ativo' : '';
+
+        return `
+            <div class="chat-item ${classeAtivo}" onclick="abrirConversa(${c.id})">
+                <div class="vaga-empresa-logo" style="background:${c.corEmpresa}; font-size:14px; width:34px; height:34px; flex-shrink:0;">${c.inicialEmpresa}</div>
+                <div class="chat-item-info">
+                    <div class="chat-item-top">
+                        <strong>${c.empresa}</strong>
+                        <span>${tempoExibido}</span>
+                    </div>
+                    <p>${textoExibido}</p>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Abre o histórico de mensagens da empresa selecionada
+function abrirConversa(id) {
+    conversaAtivaId = id;
+    const conversa = conversasDB.find(c => c.id === id);
+    if (!conversa) return;
+
+    // Atualiza a seleção visual na barra lateral
+    renderConversas();
+
+    // Altera o estado das telas internas do chat
+    document.getElementById('chat-janela-vazia').style.display = 'none';
+    const janelaAtiva = document.getElementById('chat-janela-ativa');
+    janelaAtiva.style.display = 'flex';
+
+    // Sincroniza o topo do chat
+    document.getElementById('chat-header-nome').textContent = conversa.empresa;
+    const logoHeader = document.getElementById('chat-header-logo');
+    logoHeader.textContent = conversa.inicialEmpresa;
+    logoHeader.style.background = conversa.corEmpresa;
+
+    // Renderiza as mensagens trocadas
+    const feed = document.getElementById('chat-feed-mensagens');
+    feed.innerHTML = conversa.mensagens.map(m => `
+        <div class="msg-bubble ${m.remetente}">
+            ${m.texto}
+            <span class="msg-tempo">${m.tempo}</span>
+        </div>
+    `).join('');
+
+    // Rola o feed automaticamente para a última mensagem enviada
+    feed.scrollTop = feed.scrollHeight;
+}
+
+// Envia a mensagem inserida no input
+function enviarMensagemChat(event) {
+    event.preventDefault();
+    const input = document.getElementById('chat-input-texto');
+    const texto = input.value.trim();
+    if (!texto || !conversaAtivaId) return;
+
+    const conversa = conversasDB.find(c => c.id === conversaAtivaId);
+    if (!conversa) return;
+
+    const agora = new Date();
+    const horaFormatada = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+    // Armazena no mock como resposta do trabalhador
+    conversa.mensagens.push({
+        remetente: 'trabalhador',
+        texto: texto,
+        tempo: horaFormatada
+    });
+
+    input.value = '';
+    abrirConversa(conversaAtivaId); // Recarrega os balões na tela e desce o scroll
 }
 
 
