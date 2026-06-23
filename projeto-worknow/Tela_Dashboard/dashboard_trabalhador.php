@@ -1,0 +1,390 @@
+<?php
+session_start();
+
+// Proteção: Se alguém tentar acessar essa página sem logar, expulsa para o login
+if (!isset($_SESSION['usuario_nome'])) {
+    header("Location: ../login.html");
+    exit;
+}
+
+// CONDIÇÃO DO PERFIL: Define o link correto com base no tipo de usuário
+if ($_SESSION['usuario_perfil'] === 'empregador') {
+    $link_perfil = "../Tela_Perfil/Perfil-empregador/perfil_empregador.html";
+} else {
+    $link_perfil = "../Tela_Perfil/Perfil-trabalhador/perfil_trabalhador.php";
+}
+?>
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkNOW – Início</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="dashboard_trabaio.css">
+    <link rel="icon" type="image/png" href="../img/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Spinnaker&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="dash-header">
+        <h1><span class="logo-work">Work</span><span class="logo-now">NOW</span></h1>
+
+        <div class="header-busca">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="busca-header" placeholder="Buscar vagas, empresas, habilidades..."
+                oninput="buscarVagas()">
+        </div>
+
+        <nav class="dash-nav">
+            <div class="notif-wrapper">
+                <button class="btn-notificacao" onclick="toggleNotificacoes()" aria-label="Notificações">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 01-3.46 0" />
+                    </svg>
+                    <span class="notif-badge" id="notif-badge">2</span>
+                </button>
+                <div class="dropdown-notif" id="dropdown-notif">
+                    <div class="notif-header">
+                        <strong>Notificações</strong>
+                        <button onclick="marcarTodasLidas()">Marcar todas como lidas</button>
+                    </div>
+                    <div class="notif-lista" id="notif-lista"></div>
+                    <div class="notif-footer"><a href="#">Ver todas</a></div>
+                </div>
+            </div>
+
+            <div class="avatar-wrapper" onclick="toggleMenuPerfil()">
+                <div class="avatar-inicial" id="avatar-inicial">D</div>
+                <span class="avatar-nome"><?php echo $_SESSION['usuario_nome']; ?></span>
+                <div class="dropdown-perfil" id="dropdown-perfil">
+                    <a href="<?php echo $link_perfil; ?>">👤 Meu Perfil</a>
+                    <hr>
+                    <a href="../index.html" class="sair">🚪 Sair</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dash-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="dash-sidebar">
+            <nav class="sidebar-nav">
+                <a class="sidebar-link ativo" href="#" onclick="irView('painel', this); return false;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                    </svg>
+                    Painel
+                </a>
+                <a class="sidebar-link" href="#" onclick="irView('candidaturas', this); return false;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z" />
+                        <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
+                    </svg>
+                    Minhas Candidaturas
+                    <span class="sidebar-badge" id="badge-candidaturas" style="display:none">0</span>
+                </a>
+                <a class="sidebar-link" href="#">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                    </svg>
+                    Mensagens
+                    <span class="sidebar-badge">3</span>
+                </a>
+                <a class="sidebar-link" href="<?php echo $link_perfil; ?>">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    Meu Perfil
+                </a>
+                <a class="sidebar-link" href="#" onclick="irView('suporte', this); return false;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14" />
+                    </svg>
+                    Suporte
+                </a>
+            </nav>
+
+            <div class="sidebar-perfil-card">
+                <div class="sidebar-perfil-top">
+                    <div class="sidebar-avatar">D</div>
+                    <div>
+                        <strong><?php echo $_SESSION['usuario_nome']; ?></strong>
+                        <span><?php echo ucfirst($_SESSION['usuario_perfil']); ?></span>
+                    </div>
+                </div>
+                <div class="sidebar-completude-label">
+                    <span>Perfil completo</span>
+                    <strong>0%</strong>
+                </div>
+                <div class="barra-completude">
+                    <div class="barra-fill" style="width:0%"></div>
+                </div>
+                <a href="<?php echo $link_perfil; ?>" class="sidebar-completar-btn">Completar perfil →</a>
+            </div>
+        </aside>
+
+        <!-- CONTEÚDO CENTRAL -->
+        <main class="dash-main">
+
+            <!-- ══ VIEW: PAINEL ══ -->
+            <div id="view-painel" style="display:flex; flex-direction:column; gap:20px">
+
+                <div class="boas-vindas">
+                    <div>
+                        <h2>Bem-vindo de volta,<br><span id="nome-usuario"><?php echo $_SESSION['usuario_nome']; ?></span>👋</h2>
+                        <p>Comece o dia encontrando o seu próximo desafio.</p>
+                    </div>
+                    <a href="<?php echo $link_perfil; ?>" class="btn-editar-perfil">Editar perfil</a>
+                </div>
+
+                <div class="mini-stats">
+                    <div class="mini-stat">
+                        <span class="mini-stat-label">Candidaturas</span>
+                        <span class="mini-stat-numero" id="stat-candidaturas">0</span>
+                    </div>
+                    <div class="mini-stat-divider"></div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-label">Andamento</span>
+                        <span class="mini-stat-numero" id="stat-andamento">0</span>
+                    </div>
+                    <div class="mini-stat-divider"></div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-label">Ganhos</span>
+                        <span class="mini-stat-numero">R$ 0</span>
+                    </div>
+                </div>
+
+                <div class="vagas-section">
+                    <div class="vagas-section-header">
+                        <h3>Vagas para você</h3>
+                        <span id="vagas-count" class="vagas-count">0 vagas encontradas</span>
+                    </div>
+
+                    <div class="filtros-bar">
+                        <select class="filtro-select" id="filtro-area" onchange="filtrarVagas()">
+                            <option value="">Todas as áreas</option>
+                            <option>Tecnologia da Informação</option>
+                            <option>Design & UX</option>
+                            <option>Marketing & Comunicação</option>
+                            <option>Construção Civil</option>
+                            <option>Saúde & Bem-estar</option>
+                            <option>Educação</option>
+                            <option>Logística & Transporte</option>
+                            <option>Gastronomia</option>
+                            <option>Administrativo & Financeiro</option>
+                        </select>
+                        <select class="filtro-select" id="filtro-tipo" onchange="filtrarVagas()">
+                            <option value="">Qualquer tipo</option>
+                            <option>CLT (Efetivo)</option>
+                            <option>Freelance / Projeto</option>
+                            <option>PJ</option>
+                            <option>Estágio</option>
+                            <option>Temporário</option>
+                        </select>
+                        <select class="filtro-select" id="filtro-modalidade" onchange="filtrarVagas()">
+                            <option value="">Qualquer modalidade</option>
+                            <option>Presencial</option>
+                            <option>Remoto</option>
+                            <option>Híbrido</option>
+                        </select>
+                        <select class="filtro-select" id="filtro-nivel" onchange="filtrarVagas()">
+                            <option value="">Qualquer nível</option>
+                            <option>Sem experiência / Iniciante</option>
+                            <option>Júnior (1–2 anos)</option>
+                            <option>Pleno (3–5 anos)</option>
+                            <option>Sênior (5+ anos)</option>
+                        </select>
+                        <button class="btn-limpar-filtros" onclick="limparFiltros()">✕ Limpar</button>
+                    </div>
+
+                    <div class="filtros-rapidos">
+                        <button class="tag-filtro ativo" onclick="filtroRapido(this, '')">Todos</button>
+                        <button class="tag-filtro" onclick="filtroRapido(this, 'Remoto')">🌐 Remoto</button>
+                        <button class="tag-filtro" onclick="filtroRapido(this, 'Freelance / Projeto')">⚡
+                            Freelance</button>
+                        <button class="tag-filtro" onclick="filtroRapido(this, 'Estágio')">🎓 Estágio</button>
+                        <button class="tag-filtro" onclick="filtroRapido(this, 'CLT (Efetivo)')">📋 CLT</button>
+                    </div>
+
+                    <div id="lista-vagas" class="lista-vagas"></div>
+
+                    <div id="sem-resultados" class="sem-resultados" style="display:none">
+                        <span>🔍</span>
+                        <p>Nenhuma vaga encontrada com esses filtros.</p>
+                        <button onclick="limparFiltros()">Limpar filtros</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ VIEW: MINHAS CANDIDATURAS ══ -->
+            <div id="view-candidaturas" style="display:none; flex-direction:column; gap:20px">
+
+                <div class="cand-header-section">
+                    <div>
+                        <h2>📋 Minhas Candidaturas</h2>
+                        <p>Gerencie as vagas em que se candidatou ou salvou para analisar depois.</p>
+                    </div>
+                    <button class="btn-editar-perfil" onclick="irView('painel', document.querySelector('.sidebar-link'))">
+                        ← Ver vagas
+                    </button>
+                </div>
+
+                <div class="filtros-rapidos" style="margin-bottom: 5px; display: flex; gap: 10px;">
+                    <button id="tab-candidaturas" class="tag-filtro ativo" onclick="irAbaSecundaria('candidaturas')">
+                        💼 Minhas Candidaturas
+                    </button>
+                    <button id="tab-favoritos" class="tag-filtro" onclick="irAbaSecundaria('favoritos')">
+                        ❤️ Vagas Favoritas
+                    </button>
+                </div>
+
+                <div id="painel-candidaturas">
+                    <div class="mini-stats" style="margin-bottom: 20px;">
+                        <div class="mini-stat">
+                            <span class="mini-stat-label">Total</span>
+                            <span class="mini-stat-numero" id="cand-total">0</span>
+                        </div>
+                        <div class="mini-stat-divider"></div>
+                        <div class="mini-stat">
+                            <span class="mini-stat-label">Em andamento</span>
+                            <span class="mini-stat-numero" id="cand-andamento">0</span>
+                        </div>
+                        <div class="mini-stat-divider"></div>
+                        <div class="mini-stat">
+                            <span class="mini-stat-label">Aprovadas</span>
+                            <span class="mini-stat-numero" id="cand-aprovadas">0</span>
+                        </div>
+                    </div>
+
+                    <div id="lista-candidaturas" class="lista-vagas"></div>
+
+                    <div id="candidaturas-vazio" class="sem-resultados" style="display:none">
+                        <span>📭</span>
+                        <p>Você ainda não se candidatou a nenhuma vaga.</p>
+                        <button onclick="irView('painel', document.querySelector('.sidebar-link'))">
+                            Explorar vagas
+                        </button>
+                    </div>
+                </div>
+
+                <div id="painel-favoritos" style="display:none">
+                    <div id="lista-favoritos" class="lista-vagas"></div>
+
+                    <div id="favoritos-vazio" class="sem-resultados" style="display:none">
+                        <span>🤍</span>
+                        <p>Sua lista de favoritos está vazia.</p>
+                        <button onclick="irView('painel', document.querySelector('.sidebar-link'))">
+                            Procurar vagas interessantes
+                        </button>
+                    </div>
+                </div>
+            </div> <div id="view-suporte" style="display:none; flex-direction:column; gap:25px">
+
+                <div class="cand-header-section">
+                    <div>
+                        <h2>🎧 Central de Suporte e Ajuda</h2>
+                        <p>Precisa de ajuda? Envie uma mensagem para nossa equipe ou tire suas dúvidas abaixo.</p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; flex-wrap: wrap;">
+
+                    <div class="right-card" style="display: flex; flex-direction: column; gap: 15px; padding: 20px;">
+                        <h3 style="color: #333; margin: 0;">Formulário de Atendimento</h3>
+                        <p style="font-size: 13px; color: #666; margin: 0;">Preencha os campos abaixo e retornaremos o mais rápido possível.</p>
+
+                        <form id="form-suporte" onsubmit="enviarSuporte(event)" style="display: flex; flex-direction: column; gap: 12px;">
+                            <div style="display: flex; flex-direction: column; gap: 5px;">
+                                <label for="suporte-assunto" style="font-size: 13px; font-weight: 600; color: #444;">Assunto</label>
+                                <select id="suporte-assunto" class="filtro-select" style="width: 100%; height: 40px;" required>
+                                    <option value="">Selecione uma opção...</option>
+                                    <option value="duvida">❓ Tirar uma dúvida</option>
+                                    <option value="problema">🐛 Relatar um problema / Bug</option>
+                                    <option value="reclamacao">📢 Fazer uma reclamação</option>
+                                    <option value="sugestao">💡 Sugestão de melhoria</option>
+                                </select>
+                            </div>
+
+                            <div style="display: flex; flex-direction: column; gap: 5px;">
+                                <label for="suporte-mensagem" style="font-size: 13px; font-weight: 600; color: #444;">Sua Mensagem</label>
+                                <textarea id="suporte-mensagem" placeholder="Descreva detalhadamente o que aconteceu ou qual é a sua dúvida..." style="width: 100%; height: 120px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; resize: none;" required></textarea>
+                            </div>
+
+                            <button type="submit" class="sidebar-completar-btn" style="border: none; cursor: pointer; text-align: center; justify-content: center; margin-top: 5px;">
+                                Enviar mensagem →
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="right-card" style="display: flex; flex-direction: column; gap: 15px; padding: 20px;">
+                        <h3 style="color: #333; margin: 0;">Perguntas Frequentes</h3>
+
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div style="padding-bottom: 10px; border-bottom: 1px solid #eee;">
+                                <strong style="font-size: 14px; color: #222; display: block; margin-bottom: 4px;">Como funciona a candidatura?</strong>
+                                <p style="font-size: 13px; color: #666; margin: 0;">Ao clicar em "Candidatar-se", seu perfil e habilidades ficam visíveis imediatamente para a empresa recrutadora.</p>
+                            </div>
+
+                            <div style="padding-bottom: 10px; border-bottom: 1px solid #eee;">
+                                <strong style="font-size: 14px; color: #222; display: block; margin-bottom: 4px;">As vagas expiram?</strong>
+                                <p style="font-size: 13px; color: #666; margin: 0;">Sim, cada vaga possui um prazo estipulado pela empresa contratante, visível logo no rodapé do card da vaga.</p>
+                            </div>
+
+                            <div>
+                                <strong style="font-size: 14px; color: #222; display: block; margin-bottom: 4px;">Como edito minhas habilidades?</strong>
+                                <p style="font-size: 13px; color: #666; margin: 0;">Você pode alterá-las acessando a página "Meu Perfil" e clicando na seção correspondente.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+
+        <!-- PAINEL DIREITO -->
+        <aside class="dash-right">
+            <div class="right-card">
+                <h4>Suas habilidades</h4>
+                <div class="habilidades-lista" id="habilidades-lista">
+                    <span class="habilidade-tag">React</span>
+                    <span class="habilidade-tag">JavaScript</span>
+                    <span class="habilidade-tag">Figma</span>
+                    <span class="habilidade-tag">CSS</span>
+                    <span class="habilidade-tag">Node.js</span>
+                </div>
+                <a href="<?php echo $link_perfil; ?>#habilidade" class="right-link">Editar habilidades →</a>
+            </div>
+            <div class="right-card">
+                <h4>Recomendadas para você</h4>
+                <div id="vagas-recomendadas" class="recomendadas-lista"></div>
+            </div>
+            <div class="right-card dica-card">
+                <h4>💡 Dica</h4>
+                <p>Perfis com foto e bio completa recebem <strong>3x mais</strong> propostas de empregadores.</p>
+                <a href="<?php echo $link_perfil; ?>" class="right-link">Completar meu perfil →</a>
+            </div>
+        </aside>
+
+    </div>
+
+    <script src="dashboard_trabaio.js"></script>
+</body>
+</html>

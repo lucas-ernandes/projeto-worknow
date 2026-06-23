@@ -1,0 +1,654 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Spinnaker&display=swap");
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: #f0f0f0;
+    min-height: 100vh;
+}
+ 
+
+/* ─── HEADER ─── */
+header {
+    background: linear-gradient(
+        to left,
+        #0b6e16 0%,
+        #1f9b2a 40%,
+        #39d632 100%
+    );
+    padding: 0 48px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+ 
+header h1 {
+    font-size: 50px;
+    font-weight: 900;
+}
+/*MAIN*/
+main{
+    min-height:calc(100vh - 100px);
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:50px 80px;
+}
+ 
+.logo-work { 
+    font-family:'Poppins', sans-serif;
+    color: black;
+    font-weight: 700;}
+.logo-now  { 
+    font-family:'Spinnaker', sans-serif;
+    color:#002E93;}
+ 
+header button {
+    padding: 10px 28px;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 0.90rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+ 
+header button:hover {
+    background: #111;
+    color: #fff;
+}
+ 
+/* ─── MAIN ─── */
+main {
+    display: flex;
+    gap: 60px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    align-items: flex-start;
+}
+ 
+/* ─── LEFT ─── */
+.left-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+ 
+.left-side h2 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #111;
+    line-height: 1.1;
+}
+ 
+.left-side h2 span {
+    color: #2ecc40;
+}
+ 
+.left-side > p {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #555;
+}
+ 
+/* cards tipo */
+.tipo-conta {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 8px;
+}
+ 
+.card-tipo {
+    padding: 18px 22px;
+    border-radius: 14px;
+    border: 2px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+ 
+.card-tipo h3 {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #111;
+    margin-bottom: 4px;
+}
+ 
+.card-tipo p {
+    font-size: 0.85rem;
+    color: #777;
+    font-weight: 600;
+}
+ 
+.card-tipo.ativo {
+    border-color: #2ecc40;
+    background: #f0fff2;
+}
+ 
+.card-tipo:hover:not(.ativo) {
+    border-color: #aaa;
+}
+ 
+/* ─── RIGHT ─── */
+.right-side {
+    width: 45%;
+    background: #fff;
+    border-radius: 20px;
+    padding: 44px 40px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+ 
+.right-side h3 {
+    text-align: center;
+    color: #999;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+ 
+.right-side h1 {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: #111;
+    letter-spacing: 1px;
+    margin-bottom: 32px;
+}
+ 
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+ 
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    height: 60px;
+    border: none;
+    border-radius: 14px;
+    padding: 0 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    background: #f0f0f0;
+    outline: none;
+    transition: box-shadow 0.2s;
+}
+ 
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    box-shadow: 0 0 0 3px rgba(46,204,64,0.3);
+}
+ 
+input::placeholder {
+    color: #aaa;
+}
+ 
+.termos {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #777;
+    cursor: pointer;
+}
+ 
+.termos a {
+    color: #2ecc40;
+    text-decoration: none;
+    font-weight: 800;
+}
+ 
+input[type="submit"] {
+    height: 60px;
+    border: none;
+    border-radius: 14px;
+    background: #2ecc40;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(46,204,64,0.4);
+    transition: background 0.2s, transform 0.15s;
+}
+ 
+input[type="submit"]:hover {
+    background: #27b838;
+    transform: translateY(-2px);
+}
+ 
+input[type="submit"]:active {
+    transform: translateY(0);
+}
+ 
+.register {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #777;
+}
+ 
+.register a {
+    color: #1a56ff;
+    text-decoration: none;
+    font-weight: 800;
+}
+ 
+.register a:hover {
+    text-decoration: underline;
+}
+
+/* CAMPOS EXTRAS*/
+ 
+/* Mensagem de erro inline */
+.campo-erro {
+    display: block;
+    font-size: 13px;
+    color: #e53e3e;
+    margin-top: -18px;   /* sobe para ficar colado no input acima */
+    padding-left: 6px;
+    min-height: 18px;    /* evita layout shift quando aparece/some */
+}
+ 
+/* Select com mesmo estilo dos inputs */
+select {
+    height: 80px;
+    border: none;
+    border-radius: 20px;
+    padding: 0 25px;
+    font-size: 20px;
+    background: #f0f0f0;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .15);
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 24px center;
+    cursor: pointer;
+    transition: box-shadow 0.2s, background-color 0.2s;
+    color: #333;
+}
+ 
+select:focus {
+    background-color: #e8e8e8;
+    box-shadow: 0 0 0 3px rgba(46, 204, 64, 0.3);
+}
+ 
+/* Textarea */
+textarea {
+    border: none;
+    border-radius: 20px;
+    padding: 20px 25px;
+    font-size: 18px;
+    background: #f0f0f0;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .15);
+    outline: none;
+    resize: vertical;
+    min-height: 100px;
+    font-family: Arial, Helvetica, sans-serif;
+    transition: box-shadow 0.2s, background 0.2s;
+}
+ 
+textarea:focus {
+    background: #e8e8e8;
+    box-shadow: 0 0 0 3px rgba(46, 204, 64, 0.3);
+}
+ 
+/* Separador de seção dentro do form */
+.separador {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #888;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 4px 0;
+}
+ 
+.separador::before,
+.separador::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #ddd;
+}
+ 
+/* Bloco de campos extras com animação de entrada */
+.campos-extras {
+    display: none;              /* escondido por padrão */
+    flex-direction: column;
+    gap: 30px;
+    overflow: hidden;
+    /* animação */
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.45s ease, opacity 0.35s ease;
+}
+ 
+.campos-extras.visivel {
+    display: flex;
+    max-height: 1000px;         /* valor alto o suficiente pra caber tudo */
+    opacity: 1;
+}
+
+/*FOOTERRR*/
+.footer.footer-simples {
+    padding: 12px 0;
+    color: #0000007b;
+}
+
+.footer {
+    width: 100%;
+    background: #f2f1f1;
+    border-top: 1px solid #d9d8d8;
+    display: block;
+    unicode-bidi: isolate;
+    text-align: center;
+}
+
+
+/* ── Responsivo mobile ── */
+@media (max-width: 780px) {
+    select {
+        height: 60px;
+        font-size: 16px;
+        border-radius: 14px;
+    }
+ 
+    textarea {
+        font-size: 16px;
+        border-radius: 14px;
+        padding: 16px 20px;
+    }
+ 
+    .campo-erro {
+        font-size: 12px;
+    }
+    .radio-grupo {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .radio-opcao {
+        flex: none;
+        width: 220px;
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+
+    .radio-opcao:has(input:checked) {
+    background: #e8f8ea;
+    box-shadow: 0 0 0 2px #2ecc40;
+    color: #1a7d1a;
+
+}
+ 
+    .info-perfil {
+        padding: 16px 18px;
+    }
+ 
+    .info-perfil h4 {
+        font-size: 14px;
+    }
+ 
+    .info-perfil ul li {
+        font-size: 13px;
+    }
+
+/*Formulario ajeitado*/
+    header {
+        padding: 0 20px;
+        height: 80px;
+    }
+
+    header h1 {
+        font-size: 32px;
+    }
+
+    main {
+        flex-direction: column;
+        padding: 20px;
+        gap: 30px;
+    }
+
+    .left-side,
+    .right-side {
+        width: 100%;
+    }
+
+    .left-side h2 {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .left-side > p {
+        text-align: center;
+    }
+
+    .right-side {
+        padding: 25px 20px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        height: 50px;
+    }
+
+    .register {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}
+
+/* ─── PAINEL INFORMATIVO (esquerda) ─── */
+.info-perfil {
+    margin-top: 28px;
+    padding: 22px 26px;
+    background: #fff;
+    border-radius: 16px;
+    border-left: 4px solid #2ecc40;
+    box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    transition: opacity 0.25s ease;
+}
+ 
+.info-perfil.oculto {
+    display: none;
+}
+ 
+.info-perfil h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 14px;
+}
+ 
+.info-perfil ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+ 
+.info-perfil ul li {
+    font-size: 14px;
+    color: #444;
+    font-weight: 500;
+}
+ 
+/* ─── RADIO BUTTONS (formulário) ─── */
+.radio-grupo {
+    display: flex;
+    gap: 16px;
+}
+ 
+.radio-opcao {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 22px;
+    border-radius: 16px;
+    background: #f0f0f0;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 600;
+    color: #444;
+    transition: background 0.2s, box-shadow 0.2s;
+    user-select: none;
+}
+ 
+.radio-opcao input[type="radio"] {
+    accent-color: #2ecc40;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+ 
+.radio-opcao:has(input:checked) {
+    background: #e8f8ea;
+    box-shadow: 0 0 0 2px #2ecc40;
+    color: #1a7d1a;
+}
+
+
+/* ─── INFO PERFIL – itens com título + descrição ─── */
+.info-perfil ul li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+ 
+.info-perfil ul li strong {
+    font-size: 14px;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+ 
+.info-perfil ul li span {
+    font-size: 13px;
+    color: #666;
+    font-weight: 400;
+    line-height: 1.45;
+}
+ 
+/* ─── INPUT SENHA COM OLHINHO ─── */
+.input-senha {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+ 
+.input-senha input {
+    width: 100%;
+    padding-right: 70px; /* espaço pro botão */
+}
+ 
+.toggle-senha {
+    position: absolute;
+    right: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    color: #999;
+    transition: color 0.2s;
+    border-radius: 8px;
+}
+ 
+.toggle-senha:hover {
+    color: #2ecc40;
+}
+ 
+.icone-olho {
+    width: 22px;
+    height: 22px;
+}
+ 
+/* olho aberto – só aparece quando ativo */
+.toggle-senha .icone-olho-aberto {
+    display: none;
+}
+ 
+.toggle-senha.visivel .icone-olho-fechado {
+    display: none;
+}
+ 
+.toggle-senha.visivel .icone-olho-aberto {
+    display: block;
+}
+ 
+.toggle-senha.visivel {
+    color: #2ecc40;
+}
+
+@media (max-width: 768px) {
+
+    header {
+        padding: 0 20px;
+        height: 80px;
+    }
+
+    header h1 {
+        font-size: 32px;
+    }
+
+    main {
+        flex-direction: column;
+        padding: 20px;
+        gap: 30px;
+    }
+
+    .left-side,
+    .right-side {
+        width: 100%;
+    }
+
+    .left-side h2 {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .left-side > p {
+        text-align: center;
+    }
+
+    .right-side {
+        padding: 25px 20px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        height: 50px;
+    }
+
+    .register {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}
