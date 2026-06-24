@@ -57,7 +57,7 @@ nav button {
 .trabai{
      height: 600px;
 
-    background-image: url('/img/trabai\ \(1\).png');
+    background-image: url('./img/trabai\ \(1\).png');
     background-size: cover;
     background-position: center;
     margin-top: 100px;
